@@ -9,6 +9,7 @@
   <h1>勇者侵入テスト</h1>
   <button id="nextTurn">次のターン</button>
   <div id="status"></div>
+  <div id="concept"></div>
   <canvas id="mapCanvas"></canvas>
   <script type="module">
     import { generateMap } from '../lib/resourceManager.js';
@@ -32,6 +33,8 @@
     function startWave() {
       const party = heroParties[tm.getWaveIndex()];
       heroes = party ? party.members.map(() => new HeroAI(0, 0)) : [];
+      document.getElementById('concept').textContent =
+        party ? `コンセプト: ${party.concept}` : '';
     }
 
     function updateStatus() {
