@@ -1,6 +1,7 @@
 {
   "gridWidth": 40,
   "gridHeight": 40,
-  "waveCount": 5
+  "stageCount": 5,
+  "wavesPerStage": 8
 }
 

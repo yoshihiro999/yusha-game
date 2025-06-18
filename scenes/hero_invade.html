@@ -19,27 +19,45 @@
     import mapInfo from '../data/map.json' assert { type: 'json' };
     import heroParties from '../data/hero_parties.json' assert { type: 'json' };
 
-    const map = generateMap(config.gridWidth, config.gridHeight, mapInfo.defaultTile);
+    const map = generateMap(
+      config.gridWidth,
+      config.gridHeight,
+      mapInfo.defaultTile
+    );
     const renderer = new MapRenderer(document.getElementById('mapCanvas'), map);
-    const hero = new HeroAI(0, 0);
-    const tm = new TurnManager(config.waveCount);
+    const tm = new TurnManager(config.stageCount, config.wavesPerStage);
+
+    let heroes = [];
+
+    function startWave() {
+      const party = heroParties[tm.getWaveIndex()];
+      heroes = party ? party.members.map(() => new HeroAI(0, 0)) : [];
+    }
+
+    function updateStatus() {
+      const party = heroParties[tm.getWaveIndex()];
+      const team = party ? party.team : '---';
+      document.getElementById('status').textContent =
+        `Stage ${tm.currentStage} Wave ${tm.currentWave} (${team}) - Phase: ${tm.phase}`;
+    }
 
     function nextTurn() {
       if (tm.isFinished()) return;
-      if (tm.phase === 'wave') {
-        hero.getNextMove(map);
-        tm.nextPhase();
+
+      if (tm.phase === 'prepare') {
+        startWave();
       } else {
-        tm.nextPhase();
+        heroes.forEach(h => h.getNextMove(map));
       }
-      renderer.render();
-      document.getElementById('status').textContent =
-        `Wave ${tm.currentWave} / ${config.waveCount} - Phase: ${tm.phase}`;
+
+      tm.nextPhase();
+      renderer.render(heroes);
+      updateStatus();
     }
 
     document.getElementById('nextTurn').addEventListener('click', nextTurn);
-    console.log('Loaded hero parties', heroParties);
     renderer.render();
+    updateStatus();
   </script>
 </body>
 </html>

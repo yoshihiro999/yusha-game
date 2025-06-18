@@ -8,7 +8,7 @@ export class MapRenderer {
     canvas.height = map.height * this.cellSize;
   }
 
-  render() {
+  render(heroes = []) {
     for (let y = 0; y < this.map.height; y++) {
       for (let x = 0; x < this.map.width; x++) {
         const tile = this.map.tiles[y][x];
@@ -23,6 +23,16 @@ export class MapRenderer {
         );
       }
     }
+
+    this.ctx.fillStyle = 'blue';
+    heroes.forEach(h => {
+      this.ctx.fillRect(
+        h.x * this.cellSize,
+        h.y * this.cellSize,
+        this.cellSize,
+        this.cellSize
+      );
+    });
   }
 }
 
