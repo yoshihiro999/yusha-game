@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>勇者侵入テスト</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+</head>
+<body>
+  <h1>勇者侵入テスト</h1>
+  <button id="nextTurn">次のターン</button>
+  <div id="status"></div>
+  <canvas id="mapCanvas"></canvas>
+  <script type="module">
+    import { generateMap } from '../lib/resourceManager.js';
+    import { HeroAI } from '../scripts/hero_ai.js';
+    import { MapRenderer } from '../scripts/map_renderer.js';
+    import { TurnManager } from '../scripts/turn_manager.js';
+    import config from '../data/game_config.json' assert { type: 'json' };
+    import mapInfo from '../data/map.json' assert { type: 'json' };
+
+    const map = generateMap(config.gridWidth, config.gridHeight, mapInfo.defaultTile);
+    const renderer = new MapRenderer(document.getElementById('mapCanvas'), map);
+    const hero = new HeroAI(0, 0);
+    const tm = new TurnManager(config.waveCount);
+
+    function nextTurn() {
+      if (tm.isFinished()) return;
+      if (tm.phase === 'wave') {
+        hero.getNextMove(map);
+        tm.nextPhase();
+      } else {
+        tm.nextPhase();
+      }
+      renderer.render();
+      document.getElementById('status').textContent =
+        `Wave ${tm.currentWave} / ${config.waveCount} - Phase: ${tm.phase}`;
+    }
+
+    document.getElementById('nextTurn').addEventListener('click', nextTurn);
+    renderer.render();
+  </script>
+</body>
+</html>
+
