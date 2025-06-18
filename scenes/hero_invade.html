@@ -20,16 +20,26 @@
     import heroParties from '../data/hero_parties.json' assert { type: 'json' };
 
     const map = generateMap(config.gridWidth, config.gridHeight, mapInfo.defaultTile);
-    const renderer = new MapRenderer(document.getElementById('mapCanvas'), map);
-    const hero = new HeroAI(0, 0);
+    const heroes = [];
+    const renderer = new MapRenderer(document.getElementById('mapCanvas'), map, heroes);
     const tm = new TurnManager(config.waveCount);
+
+    function spawnHeroesForWave(wave) {
+      const party = heroParties.find(p => p.stage === wave);
+      if (!party) return;
+      party.members.forEach(() => {
+        heroes.push({ ai: new HeroAI(0, 0) });
+      });
+      renderer.setHeroes(heroes);
+    }
 
     function nextTurn() {
       if (tm.isFinished()) return;
-      if (tm.phase === 'wave') {
-        hero.getNextMove(map);
+      if (tm.phase === 'prepare') {
+        spawnHeroesForWave(tm.currentWave);
         tm.nextPhase();
       } else {
+        heroes.forEach(h => h.ai.getNextMove(map));
         tm.nextPhase();
       }
       renderer.render();
