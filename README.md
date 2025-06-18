@@ -33,6 +33,12 @@
 │   ├── layered_map_renderer.js  ← レイヤーマップ描画
 │   └── monster_canvas.js        ← 魔物配置処理
 │
+├── assets/                # 画像アセット
+│   ├── backgrounds/          ← 背景画像用
+│   ├── characters/           ← キャラクター画像用
+│   ├── monsters/             ← モンスター画像用
+│   └── ui/                   ← UI素材用
+│
 ├── styles/                 # 共通スタイル
 │   └── styles.css               ← 画面用スタイル
 ```
