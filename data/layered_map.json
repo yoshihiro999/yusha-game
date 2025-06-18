@@ -1,0 +1,29 @@
+{
+  "size": [40, 20],
+  "layers": [
+    {
+      "name": "background",
+      "tiles": [
+        {"type": "grass", "area": [[0,0], [39,19]]},
+        {"type": "building", "position": [18,0], "size": [4,4]}
+      ]
+    },
+    {
+      "name": "terrain",
+      "tiles": [
+        {"type": "soil", "area": [[0,15],[39,19]]},
+        {"type": "rock", "line": [[0,14],[39,14]]}
+      ]
+    },
+    {
+      "name": "object",
+      "objects": [
+        {"type": "slime", "position": [5,16]},
+        {"type": "hero_corpse", "position": [14,15]}
+      ]
+    }
+  ],
+  "ui": [
+    {"type": "label", "content": "STAGE CLEAR", "position": [20,1]}
+  ]
+}
