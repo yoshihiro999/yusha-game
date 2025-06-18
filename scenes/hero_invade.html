@@ -17,6 +17,7 @@
     import { TurnManager } from '../scripts/turn_manager.js';
     import config from '../data/game_config.json' assert { type: 'json' };
     import mapInfo from '../data/map.json' assert { type: 'json' };
+    import heroParties from '../data/hero_parties.json' assert { type: 'json' };
 
     const map = generateMap(config.gridWidth, config.gridHeight, mapInfo.defaultTile);
     const renderer = new MapRenderer(document.getElementById('mapCanvas'), map);
@@ -37,6 +38,7 @@
     }
 
     document.getElementById('nextTurn').addEventListener('click', nextTurn);
+    console.log('Loaded hero parties', heroParties);
     renderer.render();
   </script>
 </body>
