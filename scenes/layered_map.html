@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Layered Map Demo</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+</head>
+<body>
+  <h1>Layered Map Demo</h1>
+  <canvas id="layeredCanvas"></canvas>
+  <script type="module">
+    import mapData from '../data/layered_map.json' assert { type: 'json' };
+    import { LayeredMapRenderer } from '../scripts/layered_map_renderer.js';
+
+    const canvas = document.getElementById('layeredCanvas');
+    const renderer = new LayeredMapRenderer(canvas, mapData);
+    renderer.render();
+  </script>
+</body>
+</html>

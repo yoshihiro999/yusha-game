@@ -10,6 +10,7 @@
 │   ├── hero_parties.json        ← 勇者パーティ編成
 │   ├── heroes.json              ← 職業定義・セリフ構成
 │   ├── map.json                 ← 地形・資源構成
+│   ├── layered_map.json         ← レイヤー付きマップサンプル
 │   ├── monsters.json            ← 魔物ID・種族構成
 │   └── monsters_detailed.json   ← 魔物詳細パラメータ
 │
@@ -21,6 +22,7 @@
 │   ├── game.html                ← メインUI
 │   ├── hero_invade.html         ← 勇者侵攻モードUI
 │   ├── monster_canvas.html      ← 魔物配置モードUI
+│   ├── layered_map.html         ← レイヤー構造マップ表示
 │   └── index.html               ← ランチャー画面
 │
 ├── scripts/                 # ゲーム制御スクリプト
@@ -28,6 +30,7 @@
 │   ├── turn_manager.js          ← フェーズ・wave制御
 │   ├── hero_ai.js               ← 勇者探索AI
 │   ├── map_renderer.js          ← マップ描画
+│   ├── layered_map_renderer.js  ← レイヤーマップ描画
 │   └── monster_canvas.js        ← 魔物配置処理
 │
 ├── styles/                 # 共通スタイル
@@ -52,6 +55,8 @@
 ## 実行方法
 
 ブラウザで`scenes/index.html`を開くとランチャー画面が表示されます。開発中のため、ローカルの簡易HTTPサーバなどで公開すると動作確認しやすくなります。
+
+`scenes/layered_map.html`を開くと、レイヤー構造を用いたマップ描画サンプルを確認できます。
 
 ## 今後の追加予定
 
