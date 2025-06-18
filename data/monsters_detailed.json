@@ -1,0 +1,702 @@
+[
+  {
+    "name": "スライム",
+    "species": "スライム族",
+    "tier": "下位",
+    "hp": 42,
+    "attack": 9
+  },
+  {
+    "name": "バブルスライム",
+    "species": "スライム族",
+    "tier": "下位",
+    "hp": 32,
+    "attack": 11
+  },
+  {
+    "name": "スライムベス",
+    "species": "スライム族",
+    "tier": "下位",
+    "hp": 43,
+    "attack": 16
+  },
+  {
+    "name": "メタルスライム",
+    "species": "スライム族",
+    "tier": "中位",
+    "hp": 133,
+    "attack": 48
+  },
+  {
+    "name": "はぐれメタル",
+    "species": "スライム族",
+    "tier": "中位",
+    "hp": 53,
+    "attack": 43
+  },
+  {
+    "name": "キングスライム",
+    "species": "スライム族",
+    "tier": "上位",
+    "hp": 196,
+    "attack": 129
+  },
+  {
+    "name": "スライムナイト",
+    "species": "スライム族",
+    "tier": "中位",
+    "hp": 109,
+    "attack": 24
+  },
+  {
+    "name": "ダークスライム",
+    "species": "スライム族",
+    "tier": "中位",
+    "hp": 88,
+    "attack": 22
+  },
+  {
+    "name": "ジェルキング",
+    "species": "スライム族",
+    "tier": "上位",
+    "hp": 499,
+    "attack": 119
+  },
+  {
+    "name": "マグマスライム",
+    "species": "スライム族",
+    "tier": "上位",
+    "hp": 338,
+    "attack": 76
+  },
+  {
+    "name": "おおねずみ",
+    "species": "獣族",
+    "tier": "下位",
+    "hp": 17,
+    "attack": 11
+  },
+  {
+    "name": "ウルフ",
+    "species": "獣族",
+    "tier": "中位",
+    "hp": 108,
+    "attack": 58
+  },
+  {
+    "name": "ファングタイガー",
+    "species": "獣族",
+    "tier": "中位",
+    "hp": 115,
+    "attack": 43
+  },
+  {
+    "name": "ヘルウルフ",
+    "species": "獣族",
+    "tier": "上位",
+    "hp": 220,
+    "attack": 102
+  },
+  {
+    "name": "ケルベロス",
+    "species": "獣族",
+    "tier": "上位",
+    "hp": 257,
+    "attack": 73
+  },
+  {
+    "name": "ブラックベア",
+    "species": "獣族",
+    "tier": "中位",
+    "hp": 103,
+    "attack": 24
+  },
+  {
+    "name": "ミノタウロス",
+    "species": "獣族",
+    "tier": "上位",
+    "hp": 400,
+    "attack": 108
+  },
+  {
+    "name": "コヨーテ",
+    "species": "獣族",
+    "tier": "中位",
+    "hp": 97,
+    "attack": 54
+  },
+  {
+    "name": "ダークホーン",
+    "species": "獣族",
+    "tier": "上位",
+    "hp": 373,
+    "attack": 124
+  },
+  {
+    "name": "フェンリル",
+    "species": "獣族",
+    "tier": "上位",
+    "hp": 278,
+    "attack": 102
+  },
+  {
+    "name": "マンドラゴラ",
+    "species": "植物族",
+    "tier": "下位",
+    "hp": 32,
+    "attack": 12
+  },
+  {
+    "name": "マンドラバッド",
+    "species": "植物族",
+    "tier": "中位",
+    "hp": 92,
+    "attack": 23
+  },
+  {
+    "name": "ポイズンフラワー",
+    "species": "植物族",
+    "tier": "中位",
+    "hp": 52,
+    "attack": 36
+  },
+  {
+    "name": "魔樹エント",
+    "species": "植物族",
+    "tier": "上位",
+    "hp": 271,
+    "attack": 62
+  },
+  {
+    "name": "ブラッドバイン",
+    "species": "植物族",
+    "tier": "上位",
+    "hp": 355,
+    "attack": 124
+  },
+  {
+    "name": "カラフルポピー",
+    "species": "植物族",
+    "tier": "中位",
+    "hp": 66,
+    "attack": 34
+  },
+  {
+    "name": "フラワーウィッチ",
+    "species": "植物族",
+    "tier": "上位",
+    "hp": 416,
+    "attack": 83
+  },
+  {
+    "name": "ツタゾンビ",
+    "species": "植物族",
+    "tier": "中位",
+    "hp": 140,
+    "attack": 41
+  },
+  {
+    "name": "食人草",
+    "species": "植物族",
+    "tier": "中位",
+    "hp": 53,
+    "attack": 26
+  },
+  {
+    "name": "古代樹の霊",
+    "species": "植物族",
+    "tier": "上位",
+    "hp": 354,
+    "attack": 114
+  },
+  {
+    "name": "アリ兵",
+    "species": "昆虫族",
+    "tier": "下位",
+    "hp": 29,
+    "attack": 6
+  },
+  {
+    "name": "スズメバチ兵",
+    "species": "昆虫族",
+    "tier": "中位",
+    "hp": 130,
+    "attack": 42
+  },
+  {
+    "name": "毒ムカデ",
+    "species": "昆虫族",
+    "tier": "中位",
+    "hp": 57,
+    "attack": 59
+  },
+  {
+    "name": "クイーンビー",
+    "species": "昆虫族",
+    "tier": "上位",
+    "hp": 247,
+    "attack": 108
+  },
+  {
+    "name": "デスホーネット",
+    "species": "昆虫族",
+    "tier": "上位",
+    "hp": 403,
+    "attack": 74
+  },
+  {
+    "name": "アントロード",
+    "species": "昆虫族",
+    "tier": "上位",
+    "hp": 483,
+    "attack": 71
+  },
+  {
+    "name": "カマキリナイト",
+    "species": "昆虫族",
+    "tier": "中位",
+    "hp": 95,
+    "attack": 25
+  },
+  {
+    "name": "バグソルジャー",
+    "species": "昆虫族",
+    "tier": "中位",
+    "hp": 105,
+    "attack": 40
+  },
+  {
+    "name": "ブロブロフライ",
+    "species": "昆虫族",
+    "tier": "下位",
+    "hp": 27,
+    "attack": 8
+  },
+  {
+    "name": "モスエンペラー",
+    "species": "昆虫族",
+    "tier": "上位",
+    "hp": 416,
+    "attack": 113
+  },
+  {
+    "name": "インプ",
+    "species": "魔族",
+    "tier": "下位",
+    "hp": 33,
+    "attack": 17
+  },
+  {
+    "name": "グール",
+    "species": "魔族",
+    "tier": "中位",
+    "hp": 103,
+    "attack": 58
+  },
+  {
+    "name": "シャドウ",
+    "species": "魔族",
+    "tier": "中位",
+    "hp": 146,
+    "attack": 52
+  },
+  {
+    "name": "リッチ",
+    "species": "魔族",
+    "tier": "上位",
+    "hp": 250,
+    "attack": 76
+  },
+  {
+    "name": "アークデーモン",
+    "species": "魔族",
+    "tier": "上位",
+    "hp": 317,
+    "attack": 136
+  },
+  {
+    "name": "バフォメット",
+    "species": "魔族",
+    "tier": "上位",
+    "hp": 310,
+    "attack": 111
+  },
+  {
+    "name": "ダークエルフ",
+    "species": "魔族",
+    "tier": "中位",
+    "hp": 65,
+    "attack": 46
+  },
+  {
+    "name": "ブラッドサッカー",
+    "species": "魔族",
+    "tier": "中位",
+    "hp": 72,
+    "attack": 51
+  },
+  {
+    "name": "カースドマン",
+    "species": "魔族",
+    "tier": "上位",
+    "hp": 313,
+    "attack": 79
+  },
+  {
+    "name": "奈落の使者",
+    "species": "魔族",
+    "tier": "上位",
+    "hp": 474,
+    "attack": 64
+  },
+  {
+    "name": "ベビードラゴン",
+    "species": "竜族",
+    "tier": "下位",
+    "hp": 44,
+    "attack": 17
+  },
+  {
+    "name": "ドラゴン",
+    "species": "竜族",
+    "tier": "中位",
+    "hp": 75,
+    "attack": 39
+  },
+  {
+    "name": "ファイアドラゴン",
+    "species": "竜族",
+    "tier": "中位",
+    "hp": 109,
+    "attack": 41
+  },
+  {
+    "name": "エルダードラゴン",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 300,
+    "attack": 118
+  },
+  {
+    "name": "ダークドラゴン",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 447,
+    "attack": 64
+  },
+  {
+    "name": "スカイドラゴン",
+    "species": "竜族",
+    "tier": "中位",
+    "hp": 82,
+    "attack": 27
+  },
+  {
+    "name": "グランドドラゴン",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 266,
+    "attack": 111
+  },
+  {
+    "name": "クリスタルドラゴン",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 240,
+    "attack": 128
+  },
+  {
+    "name": "ツインヘッドドラゴン",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 225,
+    "attack": 141
+  },
+  {
+    "name": "竜王の末裔",
+    "species": "竜族",
+    "tier": "上位",
+    "hp": 385,
+    "attack": 132
+  },
+  {
+    "name": "ちびホーク",
+    "species": "鳥族",
+    "tier": "下位",
+    "hp": 24,
+    "attack": 16
+  },
+  {
+    "name": "イビルクロウ",
+    "species": "鳥族",
+    "tier": "中位",
+    "hp": 139,
+    "attack": 52
+  },
+  {
+    "name": "グリフォン",
+    "species": "鳥族",
+    "tier": "中位",
+    "hp": 116,
+    "attack": 37
+  },
+  {
+    "name": "サンダーバード",
+    "species": "鳥族",
+    "tier": "上位",
+    "hp": 374,
+    "attack": 129
+  },
+  {
+    "name": "ロックバード",
+    "species": "鳥族",
+    "tier": "上位",
+    "hp": 339,
+    "attack": 94
+  },
+  {
+    "name": "ファイアバード",
+    "species": "鳥族",
+    "tier": "上位",
+    "hp": 428,
+    "attack": 147
+  },
+  {
+    "name": "ウインドホーク",
+    "species": "鳥族",
+    "tier": "中位",
+    "hp": 65,
+    "attack": 54
+  },
+  {
+    "name": "ダークレイヴン",
+    "species": "鳥族",
+    "tier": "上位",
+    "hp": 326,
+    "attack": 83
+  },
+  {
+    "name": "ヘルオウル",
+    "species": "鳥族",
+    "tier": "中位",
+    "hp": 65,
+    "attack": 50
+  },
+  {
+    "name": "フェニックス",
+    "species": "鳥族",
+    "tier": "上位",
+    "hp": 484,
+    "attack": 91
+  },
+  {
+    "name": "おばけ",
+    "species": "幽霊族",
+    "tier": "下位",
+    "hp": 11,
+    "attack": 9
+  },
+  {
+    "name": "ゴースト",
+    "species": "幽霊族",
+    "tier": "中位",
+    "hp": 114,
+    "attack": 35
+  },
+  {
+    "name": "レイス",
+    "species": "幽霊族",
+    "tier": "中位",
+    "hp": 71,
+    "attack": 25
+  },
+  {
+    "name": "デスナイト",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 298,
+    "attack": 106
+  },
+  {
+    "name": "死神",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 344,
+    "attack": 121
+  },
+  {
+    "name": "ファントム",
+    "species": "幽霊族",
+    "tier": "中位",
+    "hp": 133,
+    "attack": 57
+  },
+  {
+    "name": "ソウルイーター",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 480,
+    "attack": 123
+  },
+  {
+    "name": "霊界の門番",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 165,
+    "attack": 88
+  },
+  {
+    "name": "ヘルスピリット",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 341,
+    "attack": 102
+  },
+  {
+    "name": "幽界の王",
+    "species": "幽霊族",
+    "tier": "上位",
+    "hp": 226,
+    "attack": 95
+  },
+  {
+    "name": "錆びたゴーレム",
+    "species": "古代兵器",
+    "tier": "下位",
+    "hp": 16,
+    "attack": 11
+  },
+  {
+    "name": "鉄のゴーレム",
+    "species": "古代兵器",
+    "tier": "中位",
+    "hp": 105,
+    "attack": 44
+  },
+  {
+    "name": "魔導機兵",
+    "species": "古代兵器",
+    "tier": "中位",
+    "hp": 65,
+    "attack": 50
+  },
+  {
+    "name": "魔導機兵オメガ",
+    "species": "古代兵器",
+    "tier": "上位",
+    "hp": 212,
+    "attack": 83
+  },
+  {
+    "name": "ストーンガード",
+    "species": "古代兵器",
+    "tier": "中位",
+    "hp": 149,
+    "attack": 22
+  },
+  {
+    "name": "グラビトンキャノン",
+    "species": "古代兵器",
+    "tier": "上位",
+    "hp": 289,
+    "attack": 76
+  },
+  {
+    "name": "鋼の巨人",
+    "species": "古代兵器",
+    "tier": "上位",
+    "hp": 434,
+    "attack": 132
+  },
+  {
+    "name": "機械竜ギガント",
+    "species": "古代兵器",
+    "tier": "上位",
+    "hp": 428,
+    "attack": 92
+  },
+  {
+    "name": "自律型戦闘兵器",
+    "species": "古代兵器",
+    "tier": "中位",
+    "hp": 75,
+    "attack": 30
+  },
+  {
+    "name": "封印兵器イデア",
+    "species": "古代兵器",
+    "tier": "上位",
+    "hp": 300,
+    "attack": 146
+  },
+  {
+    "name": "コボルト",
+    "species": "人型",
+    "tier": "下位",
+    "hp": 33,
+    "attack": 8
+  },
+  {
+    "name": "ゴブリン",
+    "species": "人型",
+    "tier": "下位",
+    "hp": 43,
+    "attack": 17
+  },
+  {
+    "name": "ゴブリンナイト",
+    "species": "人型",
+    "tier": "中位",
+    "hp": 80,
+    "attack": 57
+  },
+  {
+    "name": "オーガ",
+    "species": "人型",
+    "tier": "中位",
+    "hp": 72,
+    "attack": 22
+  },
+  {
+    "name": "オーガロード",
+    "species": "人型",
+    "tier": "上位",
+    "hp": 171,
+    "attack": 149
+  },
+  {
+    "name": "ダークナイト",
+    "species": "人型",
+    "tier": "中位",
+    "hp": 96,
+    "attack": 44
+  },
+  {
+    "name": "アサシン",
+    "species": "人型",
+    "tier": "中位",
+    "hp": 78,
+    "attack": 25
+  },
+  {
+    "name": "バーバリアン",
+    "species": "人型",
+    "tier": "中位",
+    "hp": 115,
+    "attack": 45
+  },
+  {
+    "name": "ブラックガード",
+    "species": "人型",
+    "tier": "上位",
+    "hp": 389,
+    "attack": 104
+  },
+  {
+    "name": "魔王の影武者",
+    "species": "人型",
+    "tier": "上位",
+    "hp": 326,
+    "attack": 133
+  }
+]
