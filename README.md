@@ -88,7 +88,7 @@
 | `data/layered_map.json` | 表示用サンプル完了 | ゲーム本編への取り込み |
 | `data/monsters.json` | IDと進化情報を簡易登録 | 追加種族や進化分岐の拡充 |
 | `data/monsters_detailed.json` | 詳細データを一部記載 | ゲームロジックとの連携 |
-| `lib/resourceManager.js` | マップ生成・Wave管理のみ | 養分・魔分循環処理の実装 |
+| `lib/resourceManager.js` | マップ生成とWave管理に加え資源分配・吸収を実装 | バランス調整 |
 | `lib/utils.js` | 単体デモ用の掘削処理 | 本編スクリプトへの統合 |
 | `scripts/game.js` | 基本的なターン制は動作 | 処理の整理とテスト追加 |
 | `scripts/hero_ai.js` | 右手法ベースで動作 | トラップ対応や記憶強化 |
@@ -99,7 +99,7 @@
 
 ### 未着手・中途半端な項目
 
-- 資源循環システムの本格実装（`lib/resourceManager.js`の拡張が必要）
+- 資源循環バランスの調整
 - 画像アセットの収集と配置（`assets/`以下）
 - 各データファイルの詳細仕様書作成
 - テストコードの整備
