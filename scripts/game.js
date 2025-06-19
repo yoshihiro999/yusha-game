@@ -52,7 +52,8 @@ function createMap() {
         biome: biomeKey,
         nutrients: b.nutrients,
         mana: b.mana,
-        monster: null
+        monster: null,
+        fire: 0
       });
     }
     map.push(row);
@@ -71,7 +72,19 @@ function spawnHero() {
 }
 
 function spawnMonster(x, y) {
-  map[y][x].monster = { stage: 0, nutrients: 0, hp: 8, atk: 2 };
+  const speciesList = ['スライム族', '獣族', '植物族', '昆虫族', 'アンデッド族', '魔族'];
+  const tiers = ['下位', '中位', '上位'];
+  const species = randChoice(speciesList);
+  const tier = randChoice(tiers);
+  map[y][x].monster = {
+    stage: 0,
+    nutrients: 0,
+    hp: 8,
+    atk: 2,
+    species,
+    tier,
+    age: 0
+  };
 }
 
 function heroMove() {
@@ -90,6 +103,10 @@ function heroMove() {
   hero.x += dir[0];
   hero.y += dir[1];
   visited.add(`${hero.x},${hero.y}`);
+  const tile = map[hero.y][hero.x];
+  if (tile.fire && tile.fire > 0) {
+    hero.hp -= 1;
+  }
 }
 
 function fight(monster, tile) {
@@ -146,22 +163,85 @@ function autoBattle(monster, mx, my, heroFirst) {
 }
 
 function monsterTurn() {
+  const moves = [];
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
       const m = map[y][x].monster;
       if (!m) continue;
-      if (map[y][x].nutrients > 0) {
-        map[y][x].nutrients -= 1;
-        m.nutrients += 1;
-      }
-      if (m.stage < 2 && m.nutrients >= (m.stage + 1) * 3) {
-        m.stage += 1;
-        m.nutrients = 0;
-        m.hp += 4;
-        m.atk += 1;
-      }
+      const dir = window.monsterAI.decideMonsterMove(m, x, y, map, hero);
+      moves.push({ m, fromX: x, fromY: y, dx: dir[0], dy: dir[1] });
     }
   }
+
+  moves.forEach(move => {
+    const { m, fromX, fromY, dx, dy } = move;
+    const fx = fromX;
+    const fy = fromY;
+    const tx = fx + dx;
+    const ty = fy + dy;
+    if (tx < 0 || ty < 0 || tx >= gridSize || ty >= gridSize) return;
+    const targetTile = map[ty][tx];
+    const fromTile = map[fy][fx];
+
+    window.monsterAI.afterMonsterMove(m, fromTile);
+
+    if (hero.x === tx && hero.y === ty) {
+      const result = autoBattle(m, tx, ty, false);
+      if (result === 'heroDead') return;
+    } else if (!targetTile.monster) {
+      targetTile.monster = m;
+      fromTile.monster = null;
+    }
+
+    if (targetTile.nutrients > 0) {
+      targetTile.nutrients -= 1;
+      m.nutrients = (m.nutrients || 0) + 1;
+    }
+    m.age += 1;
+    if (m.stage < 2 && m.nutrients >= (m.stage + 1) * 3) {
+      m.stage += 1;
+      m.nutrients = 0;
+      m.hp += 4;
+      m.atk += 1;
+    }
+
+    if (m.species === '植物族' && m.tier === '中位' && m.age % 5 === 0) {
+      const dirs = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1]
+      ];
+      for (const d of dirs) {
+        const sx = tx + d[0];
+        const sy = ty + d[1];
+        if (
+          sx >= 0 &&
+          sy >= 0 &&
+          sx < gridSize &&
+          sy < gridSize &&
+          !map[sy][sx].monster
+        ) {
+          map[sy][sx].monster = {
+            stage: 0,
+            nutrients: 0,
+            hp: 8,
+            atk: 2,
+            species: '植物族',
+            tier: '下位',
+            age: 0
+          };
+          break;
+        }
+      }
+    }
+
+    if (m.species === '植物族' && m.tier === '上位') {
+      if (Math.abs(hero.x - tx) + Math.abs(hero.y - ty) === 1) {
+        hero.hp -= 1; // trap damage
+      }
+    }
+  });
 }
 
 function checkDemonLord() {
@@ -182,6 +262,11 @@ function render() {
       const tile = map[y][x];
       ctx.fillStyle = biomes[tile.biome].color;
       ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      if (tile.fire && tile.fire > 0) {
+        ctx.fillStyle = 'rgba(255,100,0,0.5)';
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        tile.fire -= 1;
+      }
       if (tile.monster) {
         ctx.fillStyle = ['#444', '#222', '#000'][tile.monster.stage];
         ctx.beginPath();
