@@ -6,12 +6,18 @@
   <link rel="stylesheet" href="../styles/styles.css" />
 </head>
 <body>
-  <h1>勇者侵入テスト</h1>
-  <button id="nextTurn">次のターン</button>
-  <div id="status"></div>
-  <div id="concept"></div>
-  <div id="quote"></div>
-  <canvas id="mapCanvas"></canvas>
+  <header>
+    <h1>勇者侵入</h1>
+  </header>
+  <main>
+    <div class="control-panel">
+      <button id="nextTurn">次のターン</button>
+      <span id="status"></span>
+    </div>
+    <div id="concept"></div>
+    <div id="quote"></div>
+    <canvas id="mapCanvas"></canvas>
+  </main>
   <script type="module">
     import { generateMap } from '../lib/resourceManager.js';
     import { HeroAI } from '../scripts/hero_ai.js';

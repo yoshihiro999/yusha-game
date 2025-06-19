@@ -6,12 +6,18 @@
   <link rel="stylesheet" href="../styles/styles.css" />
 </head>
 <body>
-  <h1>モンスター配置テスト</h1>
-  <select id="monsterSelect"></select>
-  <button id="nextTurn">次のターン</button>
-  <button id="reset">リセット</button>
-  <div id="status"></div>
-  <canvas id="monsterCanvas"></canvas>
+  <header>
+    <h1>モンスターラボ</h1>
+  </header>
+  <main>
+    <div class="control-panel">
+      <select id="monsterSelect"></select>
+      <button id="nextTurn">次のターン</button>
+      <button id="reset">リセット</button>
+      <span id="status"></span>
+    </div>
+    <canvas id="monsterCanvas"></canvas>
+  </main>
 
   <script src="../scripts/monster_canvas.js"></script>
 </body>
