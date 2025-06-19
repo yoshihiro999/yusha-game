@@ -6,7 +6,7 @@ let monsterData = {};
 let selectedMonsterId = null;
 
 async function loadMonsterData() {
-  const res = await fetch("data/monsters.json");
+  const res = await fetch("../data/monsters.json");
   const json = await res.json();
   monsterData = Object.fromEntries(json.map(m => [m.id, m]));
   populateMonsterSelect(json);
