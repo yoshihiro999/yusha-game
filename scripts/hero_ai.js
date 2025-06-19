@@ -25,7 +25,7 @@ export class HeroAI {
     });
 
     if (dirs.length === 0) return null;
-    const dir = dirs[Math.floor(Math.random() * dirs.length)];
+    const dir = randChoice(dirs);
     this.x += dir[0];
     this.y += dir[1];
     this.visited.add(`${this.x},${this.y}`);

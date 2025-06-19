@@ -37,9 +37,7 @@ function loadState() {
   return true;
 }
 
-function randChoice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+
 
 function createMap() {
   map = [];
@@ -356,8 +354,8 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 5; i++) {
       let x, y;
       do {
-        x = Math.floor(Math.random() * gridSize);
-        y = Math.floor(Math.random() * gridSize);
+        x = randomInt(0, gridSize-1);
+        y = randomInt(0, gridSize-1);
       } while (map[y][x].type !== 'path');
       spawnMonster(x, y);
     }
