@@ -4,28 +4,49 @@
     {
       "name": "background",
       "tiles": [
-        {"type": "grass", "area": [[0,0], [39,19]]},
-        {"type": "building", "position": [18,0], "size": [4,4]}
+        { "type": "sky", "area": [[0,0],[39,4]] },
+        { "type": "mountain", "position": [10, 2] },
+        { "type": "building", "position": [5, 3] }
       ]
     },
     {
-      "name": "terrain",
+      "name": "terrain_base",
       "tiles": [
-        {"type": "soil", "area": [[0,15],[39,19]]},
-        {"type": "rock", "line": [[0,14],[39,14]]},
-        {"type": "path", "line": [[18,4],[22,4]]},
-        {"type": "path", "line": [[20,4],[20,19]]}
+        { "type": "soil", "area": [[0,5],[39,19]] },
+        { "type": "rock", "line": [[0,10],[39,10]] }
+      ]
+    },
+    {
+      "name": "terrain_decor",
+      "tiles": [
+        { "type": "grass", "position": [3, 4] },
+        { "type": "shine", "position": [12, 7] }
       ]
     },
     {
       "name": "object",
       "objects": [
-        {"type": "slime", "position": [5,16]},
-        {"type": "hero_corpse", "position": [14,15]}
+        { "type": "slime", "position": [6, 14] },
+        { "type": "hero_corpse", "position": [20, 12] }
+      ]
+    },
+    {
+      "name": "fx_effects",
+      "objects": [
+        { "type": "explosion", "position": [18, 13] }
+      ]
+    },
+    {
+      "name": "ui_overlay",
+      "ui": [
+        { "type": "label", "content": "STAGE CLEAR", "position": [10, 2] }
+      ]
+    },
+    {
+      "name": "dark_mask",
+      "tiles": [
+        { "type": "fog", "area": [[0,0],[39,19]] }
       ]
     }
-  ],
-  "ui": [
-    {"type": "label", "content": "STAGE CLEAR", "position": [20,1]}
   ]
 }
