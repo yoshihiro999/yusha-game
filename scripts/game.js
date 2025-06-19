@@ -60,12 +60,18 @@ function createMap() {
 }
 
 function spawnHero() {
-  hero = { x: 0, y: 0, hp: heroBaseStats.hp };
+  hero = {
+    x: 0,
+    y: 0,
+    hp: heroBaseStats.hp,
+    atk: heroBaseStats.atk,
+    state: 'pursuit' // 'pursuit' or 'escape'
+  };
   visited = new Set(['0,0']);
 }
 
 function spawnMonster(x, y) {
-  map[y][x].monster = { stage: 0, nutrients: 0 };
+  map[y][x].monster = { stage: 0, nutrients: 0, hp: 8, atk: 2 };
 }
 
 function heroMove() {
@@ -96,6 +102,49 @@ function fight(monster, tile) {
   return 'monsterDead';
 }
 
+function distributeResources(x, y) {
+  const dirs = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1]
+  ];
+  dirs.forEach(d => {
+    const nx = x + d[0];
+    const ny = y + d[1];
+    if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
+      map[ny][nx].nutrients += 5;
+      map[ny][nx].mana += 5;
+    }
+  });
+}
+
+function autoBattle(monster, mx, my, heroFirst) {
+  console.log('--- 戦闘開始 ---');
+  console.log(`勇者HP:${hero.hp} vs モンスターHP:${monster.hp}`);
+  let heroTurn = heroFirst;
+  while (hero.hp > 0 && monster.hp > 0) {
+    if (heroTurn) {
+      monster.hp -= hero.atk;
+      console.log(`勇者の攻撃 → ${hero.atk}ダメージ (敵残り${Math.max(monster.hp, 0)})`);
+    } else {
+      hero.hp -= monster.atk;
+      console.log(`モンスターの攻撃 → ${monster.atk}ダメージ (勇者残り${Math.max(hero.hp, 0)})`);
+    }
+    heroTurn = !heroTurn;
+  }
+  if (hero.hp <= 0) {
+    console.log('勇者チームは敗北した...');
+    distributeResources(hero.x, hero.y);
+    return 'heroDead';
+  } else {
+    console.log('モンスターを倒した！');
+    map[my][mx].monster = null;
+    distributeResources(mx, my);
+    return 'monsterDead';
+  }
+}
+
 function monsterTurn() {
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
@@ -108,6 +157,8 @@ function monsterTurn() {
       if (m.stage < 2 && m.nutrients >= (m.stage + 1) * 3) {
         m.stage += 1;
         m.nutrients = 0;
+        m.hp += 4;
+        m.atk += 1;
       }
     }
   }
@@ -155,14 +206,30 @@ function render() {
 
 function nextTurn() {
   heroMove();
-  const tile = map[hero.y][hero.x];
-  if (tile.monster) {
-    const result = fight(tile.monster, tile);
-    if (result === 'heroDead') {
-      document.getElementById('status').textContent = `勇者は倒れた。Wave ${wave} 敗北`;
-      return;
+
+  const dirs = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1]
+  ];
+  for (const d of dirs) {
+    const nx = hero.x + d[0];
+    const ny = hero.y + d[1];
+    if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
+      const m = map[ny][nx].monster;
+      if (m) {
+        const result = autoBattle(m, nx, ny, hero.state === 'pursuit');
+        if (result === 'heroDead') {
+          document.getElementById('status').textContent = `勇者は倒れた。Wave ${wave} 敗北`;
+          render();
+          return;
+        }
+        break;
+      }
     }
   }
+
   monsterTurn();
   checkDemonLord();
   render();
