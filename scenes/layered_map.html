@@ -6,8 +6,12 @@
   <link rel="stylesheet" href="../styles/styles.css" />
 </head>
 <body>
-  <h1>Layered Map Demo</h1>
-  <canvas id="layeredCanvas"></canvas>
+  <header>
+    <h1>レイヤーマップ</h1>
+  </header>
+  <main>
+    <canvas id="layeredCanvas"></canvas>
+  </main>
   <script type="module">
     import mapData from '../data/layered_map.json' assert { type: 'json' };
     import { LayeredMapRenderer } from '../scripts/layered_map_renderer.js';
