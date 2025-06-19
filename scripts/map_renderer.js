@@ -12,9 +12,13 @@ export class MapRenderer {
     for (let y = 0; y < this.map.height; y++) {
       for (let x = 0; x < this.map.width; x++) {
         const tile = this.map.tiles[y][x];
-        const mana = tile.mana;
-        const nutrients = tile.nutrients;
-        this.ctx.fillStyle = `rgb(${mana * 30}, ${nutrients * 30}, 100)`;
+        if (tile.type === 'path') {
+          this.ctx.fillStyle = '#dcb35c';
+        } else {
+          const mana = tile.mana;
+          const nutrients = tile.nutrients;
+          this.ctx.fillStyle = `rgb(${mana * 30}, ${nutrients * 30}, 100)`;
+        }
         this.ctx.fillRect(
           x * this.cellSize,
           y * this.cellSize,

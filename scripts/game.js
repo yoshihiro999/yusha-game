@@ -53,10 +53,18 @@ function createMap() {
         nutrients: b.nutrients,
         mana: b.mana,
         monster: null,
-        fire: 0
+        fire: 0,
+        type: 'soil'
       });
     }
     map.push(row);
+  }
+
+  for (let x = 0; x <= demonLord.x; x++) {
+    map[0][x].type = 'path';
+  }
+  for (let y = 0; y <= demonLord.y; y++) {
+    map[y][demonLord.x].type = 'path';
   }
 }
 
@@ -96,7 +104,14 @@ function heroMove() {
   ].filter(d => {
     const nx = hero.x + d[0];
     const ny = hero.y + d[1];
-    return nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize && !visited.has(`${nx},${ny}`);
+    return (
+      nx >= 0 &&
+      ny >= 0 &&
+      nx < gridSize &&
+      ny < gridSize &&
+      map[ny][nx].type === 'path' &&
+      !visited.has(`${nx},${ny}`)
+    );
   });
   if (dirs.length === 0) return; // stuck
   const dir = randChoice(dirs);
@@ -339,8 +354,11 @@ window.addEventListener('DOMContentLoaded', () => {
     createMap();
     spawnHero();
     for (let i = 0; i < 5; i++) {
-      const x = Math.floor(Math.random() * gridSize);
-      const y = Math.floor(Math.random() * gridSize);
+      let x, y;
+      do {
+        x = Math.floor(Math.random() * gridSize);
+        y = Math.floor(Math.random() * gridSize);
+      } while (map[y][x].type !== 'path');
       spawnMonster(x, y);
     }
   }
@@ -350,3 +368,10 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   render();
 });
+
+window.dig = function (x, y) {
+  if (map[y] && map[y][x]) {
+    map[y][x].type = 'path';
+    render();
+  }
+};

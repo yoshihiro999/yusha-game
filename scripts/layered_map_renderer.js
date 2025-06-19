@@ -66,7 +66,8 @@ export class LayeredMapRenderer {
       grass: '#77aa77',
       soil: '#aa8855',
       rock: '#888888',
-      building: '#5555aa'
+      building: '#5555aa',
+      path: '#dcb35c'
     };
     this.ctx.fillStyle = colors[type] || '#000000';
     this.ctx.fillRect(
