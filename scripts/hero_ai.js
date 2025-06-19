@@ -19,6 +19,7 @@ export class HeroAI {
         ny >= 0 &&
         nx < map.width &&
         ny < map.height &&
+        map.tiles[ny][nx].type === 'path' &&
         !this.visited.has(`${nx},${ny}`)
       );
     });

@@ -15,9 +15,14 @@ function getValidDirs(x, y, map) {
     [0, 1],
     [0, -1]
   ];
-  return dirs.filter(d =>
-    inBounds(x + d[0], y + d[1], map[0].length, map.length)
-  );
+  return dirs.filter(d => {
+    const nx = x + d[0];
+    const ny = y + d[1];
+    return (
+      inBounds(nx, ny, map[0].length, map.length) &&
+      map[ny][nx].type === 'path'
+    );
+  });
 }
 
 function moveToward(x, y, tx, ty) {

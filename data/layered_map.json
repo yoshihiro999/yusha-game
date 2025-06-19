@@ -12,7 +12,9 @@
       "name": "terrain",
       "tiles": [
         {"type": "soil", "area": [[0,15],[39,19]]},
-        {"type": "rock", "line": [[0,14],[39,14]]}
+        {"type": "rock", "line": [[0,14],[39,14]]},
+        {"type": "path", "line": [[18,4],[22,4]]},
+        {"type": "path", "line": [[20,4],[20,19]]}
       ]
     },
     {

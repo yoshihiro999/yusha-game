@@ -33,6 +33,12 @@
       config.gridHeight,
       mapInfo.defaultTile
     );
+    for (let x = 0; x <= 20; x++) {
+      map.tiles[0][x].type = 'path';
+    }
+    for (let y = 0; y <= 20; y++) {
+      map.tiles[y][20].type = 'path';
+    }
     const renderer = new MapRenderer(document.getElementById('mapCanvas'), map);
     const tm = new TurnManager(config.stageCount, config.wavesPerStage);
 
@@ -90,6 +96,13 @@
     document.getElementById('nextTurn').addEventListener('click', nextTurn);
     renderer.render();
     updateStatus();
+
+    window.dig = (x, y) => {
+      if (map.tiles[y] && map.tiles[y][x]) {
+        map.tiles[y][x].type = 'path';
+        renderer.render(heroes);
+      }
+    };
   </script>
 </body>
 </html>
