@@ -5,12 +5,14 @@
   <title>勇者侵入テスト</title>
   <link rel="stylesheet" href="../styles/styles.css" />
 </head>
-<body>
-  <h1>勇者侵入テスト</h1>
-  <button id="nextTurn">次のターン</button>
-  <div id="status"></div>
-  <div id="concept"></div>
-  <div id="quote"></div>
+<body class="horizontal">
+  <div class="control-panel">
+    <h1>勇者侵入テスト</h1>
+    <button id="nextTurn">次のターン</button>
+    <div id="status" class="info-box"></div>
+    <div id="concept" class="info-box"></div>
+    <div id="quote" class="info-box"></div>
+  </div>
   <canvas id="mapCanvas"></canvas>
   <script type="module">
     import { generateMap } from '../lib/resourceManager.js';

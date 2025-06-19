@@ -4,14 +4,36 @@ body {
   background-color: #f0f0f0;
 }
 
+body.horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.control-panel {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-box {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
 canvas {
   border: 1px solid #444;
   display: block;
   margin-top: 10px;
 }
 
-#status {
+#status,
+#concept,
+#quote {
   margin-top: 5px;
   font-size: 14px;
-  color: #333;
 }

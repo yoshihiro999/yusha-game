@@ -5,12 +5,14 @@
   <title>モンスターラボ</title>
   <link rel="stylesheet" href="../styles/styles.css" />
 </head>
-<body>
-  <h1>モンスター配置テスト</h1>
-  <select id="monsterSelect"></select>
-  <button id="nextTurn">次のターン</button>
-  <button id="reset">リセット</button>
-  <div id="status"></div>
+<body class="horizontal">
+  <div class="control-panel">
+    <h1>モンスター配置テスト</h1>
+    <select id="monsterSelect"></select>
+    <button id="nextTurn">次のターン</button>
+    <button id="reset">リセット</button>
+    <div id="status" class="info-box"></div>
+  </div>
   <canvas id="monsterCanvas"></canvas>
 
   <script src="../scripts/monster_canvas.js"></script>
