@@ -16,6 +16,7 @@
     </div>
     <div id="concept"></div>
     <div id="quote"></div>
+    <div id="banter"></div>
     <canvas id="mapCanvas"></canvas>
   </main>
   <script type="module">
@@ -36,14 +37,28 @@
     const tm = new TurnManager(config.stageCount, config.wavesPerStage);
 
     let heroes = [];
+    let banter = [];
+    let banterIndex = 0;
 
-    function startWave() {
+    async function startWave() {
       const party = heroParties[tm.getWaveIndex()];
       heroes = party ? party.members.map(() => new HeroAI(0, 0)) : [];
       document.getElementById('concept').textContent =
         party ? `コンセプト: ${party.concept}` : '';
       document.getElementById('quote').textContent =
         party ? `出発セリフ: ${party.departure_quote}` : '';
+      banterIndex = 0;
+      document.getElementById('banter').textContent = '';
+      if (party && party.battle_chat_file) {
+        try {
+          const res = await fetch(`../data/${party.battle_chat_file}`);
+          banter = await res.json();
+        } catch (e) {
+          banter = [];
+        }
+      } else {
+        banter = [];
+      }
     }
 
     function updateStatus() {
@@ -53,13 +68,18 @@
         `Stage ${tm.currentStage} Wave ${tm.currentWave} (${team}) - Phase: ${tm.phase}`;
     }
 
-    function nextTurn() {
+    async function nextTurn() {
       if (tm.isFinished()) return;
 
       if (tm.phase === 'prepare') {
-        startWave();
+        await startWave();
       } else {
         heroes.forEach(h => h.getNextMove(map));
+        if (banter.length > 0) {
+          document.getElementById('banter').textContent =
+            banter[banterIndex % banter.length];
+          banterIndex += 1;
+        }
       }
 
       tm.nextPhase();
