@@ -1,5 +1,7 @@
 const gridSize = 40;
 const cellSize = 15;
+const BASE_WIDTH = 640;
+const BASE_HEIGHT = 360;
 const biomes = {
   grass: { nutrients: 5, mana: 2, color: '#88cc88' },
   swamp: { nutrients: 3, mana: 5, color: '#88aaaa' },
@@ -9,12 +11,24 @@ const biomes = {
 const heroBaseStats = { hp: 10, mp: 5, atk: 3 };
 
 let canvas, ctx;
+let gameScale = 1;
+let offsetX = 0;
+let offsetY = 0;
 let map = [];
 let monsters = [];
 let hero;
 let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
 let visited = new Set();
 let wave = 1;
+
+function resizeCanvas() {
+  const scale = Math.min(
+    window.innerWidth / BASE_WIDTH,
+    window.innerHeight / BASE_HEIGHT
+  );
+  canvas.style.width = `${BASE_WIDTH * scale}px`;
+  canvas.style.height = `${BASE_HEIGHT * scale}px`;
+}
 
 function saveState() {
   saveGameState({
@@ -269,7 +283,9 @@ function checkDemonLord() {
 }
 
 function render() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(gameScale, 0, 0, gameScale, offsetX, offsetY);
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
       const tile = map[y][x];
@@ -345,8 +361,16 @@ function nextTurn() {
 window.addEventListener('DOMContentLoaded', () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
-  canvas.width = gridSize * cellSize;
-  canvas.height = gridSize * cellSize;
+  canvas.width = BASE_WIDTH;
+  canvas.height = BASE_HEIGHT;
+
+  const gameWidth = gridSize * cellSize;
+  const gameHeight = gridSize * cellSize;
+  gameScale = Math.min(BASE_WIDTH / gameWidth, BASE_HEIGHT / gameHeight);
+  offsetX = (BASE_WIDTH - gameWidth * gameScale) / 2;
+  offsetY = (BASE_HEIGHT - gameHeight * gameScale) / 2;
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
   if (!loadState()) {
     createMap();
