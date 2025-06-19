@@ -36,7 +36,8 @@
         "defense": 10
       }
     ],
-    "concept": "正統派王道チーム"
+    "concept": "正統派王道チーム",
+    "departure_quote": "王道をゆくぞ、魔王討伐へ！"
   },
   {
     "stage": 1,
@@ -75,7 +76,8 @@
         "defense": 17
       }
     ],
-    "concept": "口だけエリート"
+    "concept": "口だけエリート",
+    "departure_quote": "口だけじゃない、実力見せてやる。"
   },
   {
     "stage": 1,
@@ -114,7 +116,8 @@
         "defense": 12
       }
     ],
-    "concept": "姉妹パーティー"
+    "concept": "姉妹パーティー",
+    "departure_quote": "姉妹の絆で勝利をつかむわ。"
   },
   {
     "stage": 1,
@@ -153,7 +156,8 @@
         "defense": 11
       }
     ],
-    "concept": "厨二病魔法隊"
+    "concept": "厨二病魔法隊",
+    "departure_quote": "闇の力、今こそ解き放つ！"
   },
   {
     "stage": 1,
@@ -192,7 +196,8 @@
         "defense": 24
       }
     ],
-    "concept": "じいちゃんと孫"
+    "concept": "じいちゃんと孫",
+    "departure_quote": "じいちゃん、俺が守るからな！"
   },
   {
     "stage": 1,
@@ -231,7 +236,8 @@
         "defense": 10
       }
     ],
-    "concept": "亡国の復讐者たち"
+    "concept": "亡国の復讐者たち",
+    "departure_quote": "祖国の仇、必ず討ち果たす。"
   },
   {
     "stage": 1,
@@ -270,7 +276,8 @@
         "defense": 9
       }
     ],
-    "concept": "臆病者の集い"
+    "concept": "臆病者の集い",
+    "departure_quote": "震えるけど、みんなで行こう。"
   },
   {
     "stage": 1,
@@ -309,7 +316,8 @@
         "defense": 10
       }
     ],
-    "concept": "冒険初心者組"
+    "concept": "冒険初心者組",
+    "departure_quote": "冒険は初めてだけど頑張るぞ！"
   },
   {
     "stage": 2,
@@ -348,7 +356,8 @@
         "defense": 17
       }
     ],
-    "concept": "借金返済同盟"
+    "concept": "借金返済同盟",
+    "departure_quote": "借金返して晴れて自由だ！"
   },
   {
     "stage": 2,
@@ -387,7 +396,8 @@
         "defense": 9
       }
     ],
-    "concept": "空回り熱血団"
+    "concept": "空回り熱血団",
+    "departure_quote": "空回りでも情熱は本物だ！"
   },
   {
     "stage": 2,
@@ -426,7 +436,8 @@
         "defense": 12
       }
     ],
-    "concept": "気まぐれ放浪者"
+    "concept": "気まぐれ放浪者",
+    "departure_quote": "気の向くままに旅立とう。"
   },
   {
     "stage": 2,
@@ -465,7 +476,8 @@
         "defense": 22
       }
     ],
-    "concept": "筋肉至上主義"
+    "concept": "筋肉至上主義",
+    "departure_quote": "筋肉こそ最強、力で押す！"
   },
   {
     "stage": 2,
@@ -504,7 +516,8 @@
         "defense": 20
       }
     ],
-    "concept": "酒場の常連"
+    "concept": "酒場の常連",
+    "departure_quote": "酒場の名に恥じぬ武勇を。"
   },
   {
     "stage": 2,
@@ -543,7 +556,8 @@
         "defense": 22
       }
     ],
-    "concept": "メカマニアーズ"
+    "concept": "メカマニアーズ",
+    "departure_quote": "機械の神秘、思い知らせる。"
   },
   {
     "stage": 2,
@@ -582,7 +596,8 @@
         "defense": 26
       }
     ],
-    "concept": "眠り姫救出隊"
+    "concept": "眠り姫救出隊",
+    "departure_quote": "お姫様、必ず救い出します！"
   },
   {
     "stage": 2,
@@ -621,7 +636,8 @@
         "defense": 25
       }
     ],
-    "concept": "ギャンブル三昧"
+    "concept": "ギャンブル三昧",
+    "departure_quote": "一獲千金、勝負に出るぜ。"
   },
   {
     "stage": 3,
@@ -660,7 +676,8 @@
         "defense": 14
       }
     ],
-    "concept": "ちびっこ軍団"
+    "concept": "ちびっこ軍団",
+    "departure_quote": "小さくても勇気は無限大！"
   },
   {
     "stage": 3,
@@ -699,7 +716,8 @@
         "defense": 28
       }
     ],
-    "concept": "メンタル弱者会"
+    "concept": "メンタル弱者会",
+    "departure_quote": "弱い心も仲間で支えるぞ。"
   },
   {
     "stage": 3,
@@ -738,7 +756,8 @@
         "defense": 31
       }
     ],
-    "concept": "動物好き集団"
+    "concept": "動物好き集団",
+    "departure_quote": "動物と共に戦場を駆ける！"
   },
   {
     "stage": 3,
@@ -777,7 +796,8 @@
         "defense": 26
       }
     ],
-    "concept": "アウトロー合同"
+    "concept": "アウトロー合同",
+    "departure_quote": "法を外れても俺たちは進む。"
   },
   {
     "stage": 3,
@@ -816,7 +836,8 @@
         "defense": 25
       }
     ],
-    "concept": "お笑い芸人志望"
+    "concept": "お笑い芸人志望",
+    "departure_quote": "笑いで世界を明るくするぞ！"
   },
   {
     "stage": 3,
@@ -855,7 +876,8 @@
         "defense": 23
       }
     ],
-    "concept": "毒舌ツンデレ隊"
+    "concept": "毒舌ツンデレ隊",
+    "departure_quote": "ツンデレな私に付いてきな。"
   },
   {
     "stage": 3,
@@ -894,7 +916,8 @@
         "defense": 24
       }
     ],
-    "concept": "無口な守護者"
+    "concept": "無口な守護者",
+    "departure_quote": "言葉より行動で示そう。"
   },
   {
     "stage": 3,
@@ -933,7 +956,8 @@
         "defense": 30
       }
     ],
-    "concept": "貴族落ちこぼれ"
+    "concept": "貴族落ちこぼれ",
+    "departure_quote": "貴族の意地、今こそ見せる。"
   },
   {
     "stage": 4,
@@ -972,7 +996,8 @@
         "defense": 46
       }
     ],
-    "concept": "料理好き冒険者"
+    "concept": "料理好き冒険者",
+    "departure_quote": "腕前でみんなを唸らせたい。"
   },
   {
     "stage": 4,
@@ -1011,7 +1036,8 @@
         "defense": 35
       }
     ],
-    "concept": "書物マニアたち"
+    "concept": "書物マニアたち",
+    "departure_quote": "知識の力で勝利を掴む。"
   },
   {
     "stage": 4,
@@ -1050,7 +1076,8 @@
         "defense": 20
       }
     ],
-    "concept": "錬金術ギルド"
+    "concept": "錬金術ギルド",
+    "departure_quote": "錬金の秘術で道を開く！"
   },
   {
     "stage": 4,
@@ -1089,7 +1116,8 @@
         "defense": 37
       }
     ],
-    "concept": "故郷を探す旅"
+    "concept": "故郷を探す旅",
+    "departure_quote": "故郷を求めて旅を続ける。"
   },
   {
     "stage": 4,
@@ -1128,7 +1156,8 @@
         "defense": 28
       }
     ],
-    "concept": "財宝ハンター"
+    "concept": "財宝ハンター",
+    "departure_quote": "財宝はすべて俺のものだ！"
   },
   {
     "stage": 4,
@@ -1167,7 +1196,8 @@
         "defense": 40
       }
     ],
-    "concept": "究極平和主義"
+    "concept": "究極平和主義",
+    "departure_quote": "争いは好まぬ、しかし行く。"
   },
   {
     "stage": 4,
@@ -1206,7 +1236,8 @@
         "defense": 41
       }
     ],
-    "concept": "正義感暴走団"
+    "concept": "正義感暴走団",
+    "departure_quote": "暴走上等、正義を貫く！"
   },
   {
     "stage": 4,
@@ -1245,7 +1276,8 @@
         "defense": 34
       }
     ],
-    "concept": "カリスマ不在"
+    "concept": "カリスマ不在",
+    "departure_quote": "まとめ役不在でもやってやる。"
   },
   {
     "stage": 5,
@@ -1284,7 +1316,8 @@
         "defense": 50
       }
     ],
-    "concept": "実験体サバイバー"
+    "concept": "実験体サバイバー",
+    "departure_quote": "実験の成果、見せてやろう。"
   },
   {
     "stage": 5,
@@ -1323,7 +1356,8 @@
         "defense": 51
       }
     ],
-    "concept": "宇宙からの迷子"
+    "concept": "宇宙からの迷子",
+    "departure_quote": "星の故郷へ帰る手がかりを！"
   },
   {
     "stage": 5,
@@ -1362,7 +1396,8 @@
         "defense": 22
       }
     ],
-    "concept": "女装男子集団"
+    "concept": "女装男子集団",
+    "departure_quote": "俺たちだって輝きたいんだ。"
   },
   {
     "stage": 5,
@@ -1401,7 +1436,8 @@
         "defense": 26
       }
     ],
-    "concept": "密偵スパイ組"
+    "concept": "密偵スパイ組",
+    "departure_quote": "密命遂行、無駄口は叩かない。"
   },
   {
     "stage": 5,
@@ -1440,7 +1476,8 @@
         "defense": 51
       }
     ],
-    "concept": "老兵復帰チーム"
+    "concept": "老兵復帰チーム",
+    "departure_quote": "老いても闘志は衰えぬ！"
   },
   {
     "stage": 5,
@@ -1479,7 +1516,8 @@
         "defense": 37
       }
     ],
-    "concept": "強欲トレジャー"
+    "concept": "強欲トレジャー",
+    "departure_quote": "宝の匂いを逃すなよ！"
   },
   {
     "stage": 5,
@@ -1518,7 +1556,8 @@
         "defense": 51
       }
     ],
-    "concept": "傭兵崩れ一座"
+    "concept": "傭兵崩れ一座",
+    "departure_quote": "腕だけは確かだ、稼がせてもらう。"
   },
   {
     "stage": 5,
@@ -1557,6 +1596,7 @@
         "defense": 40
       }
     ],
-    "concept": "永遠の新人冒険者"
+    "concept": "永遠の新人冒険者",
+    "departure_quote": "いつまでも初心、冒険を楽しもう！"
   }
 ]
