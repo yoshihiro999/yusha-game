@@ -16,6 +16,27 @@ let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
 let visited = new Set();
 let wave = 1;
 
+function saveState() {
+  saveGameState({
+    map,
+    hero,
+    demonLord,
+    visited: Array.from(visited),
+    wave
+  });
+}
+
+function loadState() {
+  const data = loadGameState();
+  if (!data) return false;
+  map = data.map;
+  hero = data.hero;
+  demonLord = data.demonLord;
+  visited = new Set(data.visited);
+  wave = data.wave;
+  return true;
+}
+
 function randChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -162,14 +183,18 @@ window.addEventListener('DOMContentLoaded', () => {
   canvas.width = gridSize * cellSize;
   canvas.height = gridSize * cellSize;
 
-  createMap();
-  spawnHero();
-  // place some monsters
-  for (let i = 0; i < 5; i++) {
-    const x = Math.floor(Math.random() * gridSize);
-    const y = Math.floor(Math.random() * gridSize);
-    spawnMonster(x, y);
+  if (!loadState()) {
+    createMap();
+    spawnHero();
+    for (let i = 0; i < 5; i++) {
+      const x = Math.floor(Math.random() * gridSize);
+      const y = Math.floor(Math.random() * gridSize);
+      spawnMonster(x, y);
+    }
   }
-  document.getElementById('nextTurn').addEventListener('click', nextTurn);
+  document.getElementById('nextTurn').addEventListener('click', () => {
+    nextTurn();
+    saveState();
+  });
   render();
 });
