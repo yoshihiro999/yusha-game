@@ -4,10 +4,6 @@ function inBounds(x, y, width, height) {
   return x >= 0 && y >= 0 && x < width && y < height;
 }
 
-function randChoice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
 function getValidDirs(x, y, map) {
   const dirs = [
     [1, 0],

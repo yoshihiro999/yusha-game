@@ -89,13 +89,18 @@
 | `data/monsters.json` | IDと進化情報を簡易登録 | 追加種族や進化分岐の拡充 |
 | `data/monsters_detailed.json` | 詳細データを一部記載 | ゲームロジックとの連携 |
 | `lib/resourceManager.js` | マップ生成・Wave管理のみ | 養分・魔分循環処理の実装 |
-| `lib/utils.js` | 単体デモ用の掘削処理 | 本編スクリプトへの統合 |
+| `lib/utils.js` | 乱数や補助関数を提供 | ドキュメント整備 |
 | `scripts/game.js` | 基本的なターン制は動作 | 処理の整理とテスト追加 |
 | `scripts/hero_ai.js` | 右手法ベースで動作 | トラップ対応や記憶強化 |
 | `scripts/monster_ai.js` | 種族別の挙動を実装 | 行動分岐やAI強化 |
 | `scripts/monster_canvas.js` | 成長デモを確認可能 | バランス調整・UI改良 |
 | `scenes/*.html` | 各画面の最低限表示のみ | 演出・デザインの作り込み |
 | `assets/` | `.gitkeep`のみで実データ未登録 | 実際の画像アセットを準備 |
+
+### 共通ユーティリティ
+- `randomInt(min, max)` : 指定範囲の整数を返す
+- `clamp(value, min, max)` : 値を範囲内に収める
+- `randChoice(array)` : 配列から要素をランダム選択
 
 ### 未着手・中途半端な項目
 
