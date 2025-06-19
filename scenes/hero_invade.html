@@ -10,6 +10,7 @@
   <button id="nextTurn">次のターン</button>
   <div id="status"></div>
   <div id="concept"></div>
+  <div id="quote"></div>
   <canvas id="mapCanvas"></canvas>
   <script type="module">
     import { generateMap } from '../lib/resourceManager.js';
@@ -35,6 +36,8 @@
       heroes = party ? party.members.map(() => new HeroAI(0, 0)) : [];
       document.getElementById('concept').textContent =
         party ? `コンセプト: ${party.concept}` : '';
+      document.getElementById('quote').textContent =
+        party ? `出発セリフ: ${party.departure_quote}` : '';
     }
 
     function updateStatus() {
