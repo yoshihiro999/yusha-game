@@ -23,6 +23,14 @@ button {
   padding: 4px 12px;
 }
 
+.monster-select.selected {
+  background-color: #ffd85e;
+}
+
+#costLabel {
+  font-weight: bold;
+}
+
 canvas {
   border: 1px solid #444;
   display: block;

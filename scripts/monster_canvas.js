@@ -6,6 +6,9 @@ const tileSize = 20; // same as renderMap
 let canvas, ctx;
 let resourceMap, resourceManager;
 let monsters = [];
+let summonPoints = 100;
+let selectedMonster = null;
+const SUMMON_COST = 20;
 
 function init() {
   canvas = document.getElementById('monsterCanvas');
@@ -22,6 +25,25 @@ function init() {
   );
 
   canvas.addEventListener('click', onClick);
+
+  document.querySelectorAll('.monster-select').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document
+        .querySelectorAll('.monster-select')
+        .forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMonster = btn.dataset.monster;
+    });
+  });
+
+  const startBtn = document.getElementById('startWave');
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      console.log('Wave started!');
+    });
+  }
+
+  updateCost();
 }
 
 function onClick(e) {
@@ -31,8 +53,12 @@ function onClick(e) {
 
   if (x < 0 || y < 0 || x >= resourceMap.width || y >= resourceMap.height) return;
   if (monsters[y][x]) return;
+  if (!selectedMonster) return;
+  if (summonPoints < SUMMON_COST) return;
 
   monsters[y][x] = true;
+  summonPoints -= SUMMON_COST;
+  updateCost();
   const result = resourceManager.absorbResources(x, y);
   draw();
   log(`(${x},${y}) -> nutrients:${result.nutrients} mana:${result.mana}`);
@@ -48,6 +74,11 @@ function draw() {
       }
     }
   }
+}
+
+function updateCost() {
+  const el = document.getElementById('costLabel');
+  if (el) el.textContent = `召喚コスト：${summonPoints}`;
 }
 
 function log(msg) {
