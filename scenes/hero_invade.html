@@ -75,27 +75,36 @@
         `Stage ${tm.currentStage} Wave ${tm.currentWave} (${team}) - Phase: ${tm.phase}`;
     }
 
-    async function nextTurn() {
-      if (tm.isFinished()) return;
+    tm.on('placement', async () => {
+      // リソース吸収などの処理をここで行う
+      await tm.nextPhase();
+    });
 
-      if (tm.phase === 'prepare') {
-        await startWave();
-      } else {
-        heroes.forEach(h => h.getNextMove(map));
-        if (banter.length > 0) {
-          document.getElementById('banter').textContent =
-            banter[banterIndex % banter.length];
-          banterIndex += 1;
-        }
+    tm.on('waveStart', startWave);
+
+    tm.on('heroTurn', () => {
+      heroes.forEach(h => h.getNextMove(map));
+      if (banter.length > 0) {
+        document.getElementById('banter').textContent =
+          banter[banterIndex % banter.length];
+        banterIndex += 1;
       }
+    });
 
-      tm.nextPhase();
+    tm.on('transition', () => {
+      heroes = [];
+      banter = [];
+      banterIndex = 0;
+    });
+
+    document.getElementById('nextTurn').addEventListener('click', async () => {
+      await tm.nextPhase();
       renderer.render(heroes);
       updateStatus();
-    }
+    });
 
-    document.getElementById('nextTurn').addEventListener('click', nextTurn);
     renderer.render();
+    tm.start();
     updateStatus();
 
     window.dig = (x, y) => {
