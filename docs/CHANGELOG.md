@@ -2,6 +2,11 @@
 
 Codex による更新内容を時系列で記録します。新しい変更は上に追加してください。
 
+## 2025-06-22
+- `lib/resourceManager.js` に座標指定で資源を吸収する `absorbResources()` を追加。
+- `scripts/monster_canvas.js` と `scenes/monster_canvas.html` を改修し、
+  クリックしたマスへ赤いブロックを配置して吸収結果をログ表示する簡易テストを実装。
+
 ## 2025-06-21
 - `scripts/map_renderer.js` に `renderMap()` を実装。`layered_map.json` の複数レイヤーを描画可能にした。
 
