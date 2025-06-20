@@ -1,122 +1,59 @@
+import mapData from '../data/layered_map.json' assert { type: 'json' };
+import { renderMap } from './map_renderer.js';
+import { generateMap, ResourceManager } from '../lib/resourceManager.js';
+
+const tileSize = 20; // same as renderMap
 let canvas, ctx;
-const gridSize = 40;
-const cellSize = 12;
+let resourceMap, resourceManager;
 let monsters = [];
-let monsterData = {};
-let selectedMonsterId = null;
 
-async function loadMonsterData() {
-  const res = await fetch("../data/monsters.json");
-  const json = await res.json();
-  monsterData = Object.fromEntries(json.map(m => [m.id, m]));
-  populateMonsterSelect(json);
-}
+function init() {
+  canvas = document.getElementById('monsterCanvas');
+  ctx = canvas.getContext('2d');
 
-function populateMonsterSelect(data) {
-  const select = document.getElementById("monsterSelect");
-  data.forEach(monster => {
-    const option = document.createElement("option");
-    option.value = monster.id;
-    option.textContent = monster.name;
-    select.appendChild(option);
+  renderMap(canvas, mapData);
+  resourceMap = generateMap(mapData.size[0], mapData.size[1], {
+    nutrients: 10,
+    mana: 10
   });
-}
-
-function setupCanvas() {
-  canvas = document.getElementById("monsterCanvas");
-  ctx = canvas.getContext("2d");
-  canvas.width = gridSize * cellSize;
-  canvas.height = gridSize * cellSize;
-  monsters = Array.from({ length: gridSize }, () =>
-    Array.from({ length: gridSize }, () => null)
+  resourceManager = new ResourceManager({}, resourceMap);
+  monsters = Array.from({ length: resourceMap.height }, () =>
+    Array(resourceMap.width).fill(false)
   );
 
-  canvas.addEventListener("click", placeMonster);
-  document.getElementById("nextTurn").addEventListener("click", advanceTurn);
-  document.getElementById("reset").addEventListener("click", resetField);
-  document.getElementById("monsterSelect").addEventListener("change", e => {
-    selectedMonsterId = e.target.value;
-  });
-
-  selectedMonsterId = document.getElementById("monsterSelect").value;
-  render();
+  canvas.addEventListener('click', onClick);
 }
 
-function placeMonster(event) {
-  const x = Math.floor(event.offsetX / cellSize);
-  const y = Math.floor(event.offsetY / cellSize);
-  if (!selectedMonsterId || monsters[y][x]) return;
+function onClick(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - rect.left) / tileSize);
+  const y = Math.floor((e.clientY - rect.top) / tileSize);
 
-  monsters[y][x] = {
-    id: selectedMonsterId,
-    age: 0,
-    evolved: false
-  };
+  if (x < 0 || y < 0 || x >= resourceMap.width || y >= resourceMap.height) return;
+  if (monsters[y][x]) return;
 
-  render();
-  updateStatus(x, y);
+  monsters[y][x] = true;
+  const result = resourceManager.absorbResources(x, y);
+  draw();
+  log(`(${x},${y}) -> nutrients:${result.nutrients} mana:${result.mana}`);
 }
 
-function advanceTurn() {
-  for (let y = 0; y < gridSize; y++) {
-    for (let x = 0; x < gridSize; x++) {
-      let m = monsters[y][x];
-      if (!m) continue;
-
-      const data = monsterData[m.id];
-      m.age += 1;
-      if (!m.evolved && m.age >= data.growthTurns) {
-        m.evolved = true;
-      }
-    }
-  }
-  render();
-}
-
-function resetField() {
-  monsters = Array.from({ length: gridSize }, () =>
-    Array.from({ length: gridSize }, () => null)
-  );
-  render();
-  document.getElementById("status").textContent = "";
-}
-
-function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let y = 0; y < gridSize; y++) {
-    for (let x = 0; x < gridSize; x++) {
-      const m = monsters[y][x];
-      if (m) {
-        const data = monsterData[m.id];
-        ctx.fillStyle = m.evolved ? data.evolvedColor : data.color;
-        ctx.beginPath();
-        ctx.arc(
-          x * cellSize + cellSize / 2,
-          y * cellSize + cellSize / 2,
-          cellSize / 2.5,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
+function draw() {
+  renderMap(canvas, mapData);
+  ctx.fillStyle = 'red';
+  for (let y = 0; y < resourceMap.height; y++) {
+    for (let x = 0; x < resourceMap.width; x++) {
+      if (monsters[y][x]) {
+        ctx.fillRect(x * tileSize + 4, y * tileSize + 4, tileSize - 8, tileSize - 8);
       }
     }
   }
 }
 
-function updateStatus(x, y) {
-  const m = monsters[y][x];
-  if (!m) {
-    document.getElementById("status").textContent = "";
-    return;
-  }
-
-  const data = monsterData[m.id];
-  document.getElementById("status").textContent =
-    `${data.name}（Age: ${m.age}）` +
-    (m.evolved ? ` → ${data.evolution}` : "");
+function log(msg) {
+  const el = document.getElementById('log');
+  if (el) el.textContent = msg;
+  console.log(msg);
 }
 
-window.addEventListener("DOMContentLoaded", async () => {
-  await loadMonsterData();
-  setupCanvas();
-});
+window.addEventListener('DOMContentLoaded', init);

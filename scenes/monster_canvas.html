@@ -10,15 +10,11 @@
     <h1>モンスターラボ</h1>
   </header>
   <main>
-    <div class="control-panel">
-      <select id="monsterSelect"></select>
-      <button id="nextTurn">次のターン</button>
-      <button id="reset">リセット</button>
-      <span id="status"></span>
-    </div>
     <canvas id="monsterCanvas"></canvas>
+    <pre id="log" style="position: absolute; top: 5px; right: 5px;
+      background: rgba(255,255,255,0.8); padding: 4px;"></pre>
   </main>
 
-  <script src="../scripts/monster_canvas.js"></script>
+  <script type="module" src="../scripts/monster_canvas.js"></script>
 </body>
 </html>
