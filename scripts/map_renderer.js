@@ -28,13 +28,15 @@ export class MapRenderer {
       }
     }
 
-    this.ctx.fillStyle = 'blue';
+    // Use emoji for hero visualization for better visibility in tests
+    this.ctx.font = `${this.cellSize}px serif`;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
     heroes.forEach(h => {
-      this.ctx.fillRect(
-        h.x * this.cellSize,
-        h.y * this.cellSize,
-        this.cellSize,
-        this.cellSize
+      this.ctx.fillText(
+        '🦸',
+        h.x * this.cellSize + this.cellSize / 2,
+        h.y * this.cellSize + this.cellSize / 2
       );
     });
   }

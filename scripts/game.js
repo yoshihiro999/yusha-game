@@ -297,25 +297,33 @@ function render() {
         tile.fire -= 1;
       }
       if (tile.monster) {
-        ctx.fillStyle = ['#444', '#222', '#000'][tile.monster.stage];
-        ctx.beginPath();
-        ctx.arc(
+        // Draw monster using emoji for easier distinction
+        ctx.font = `${cellSize}px serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+          '👾',
           x * cellSize + cellSize / 2,
-          y * cellSize + cellSize / 2,
-          cellSize / 3,
-          0,
-          Math.PI * 2
+          y * cellSize + cellSize / 2
         );
-        ctx.fill();
       }
     }
   }
-  // hero
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(hero.x * cellSize, hero.y * cellSize, cellSize, cellSize);
-  // demon lord
-  ctx.fillStyle = demonLord.timer > 0 ? 'pink' : 'red';
-  ctx.fillRect(demonLord.x * cellSize, demonLord.y * cellSize, cellSize, cellSize);
+  // hero using emoji
+  ctx.font = `${cellSize}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(
+    '🦸',
+    hero.x * cellSize + cellSize / 2,
+    hero.y * cellSize + cellSize / 2
+  );
+  // demon lord with emoji
+  ctx.fillText(
+    demonLord.timer > 0 ? '😈' : '👿',
+    demonLord.x * cellSize + cellSize / 2,
+    demonLord.y * cellSize + cellSize / 2
+  );
 }
 
 function nextTurn() {
