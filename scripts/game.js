@@ -184,6 +184,81 @@ function getAttackName(actor, isHero, wave = 1) {
   }
 }
 
+const attackDialogues = {
+  heroes: {
+    default: [
+      '{name}！これでもくらえ！',
+      '必殺の{name}！',
+      '{name}で決める！'
+    ],
+    'アルティメットスペル': [
+      'これが究極魔法、{name}！！',
+      '消え去れ！{name}!'
+    ]
+  },
+  monsters: {
+    '下位': {
+      default: ['{name}!', 'グルル…{name}!', 'えいっ！{name}!']
+    },
+    '中位': {
+      default: ['{name}!!', '喰らえ！{name}!', 'これで終わりだ、{name}!']
+    },
+    '上位': {
+      default: ['{name}!!!', '滅びよ、{name}!', '力の限り、{name}!']
+    }
+  }
+};
+
+let speechBubbles = [];
+
+function getAttackSpeech(actor, attackName, isHero) {
+  if (isHero) {
+    const table =
+      attackDialogues.heroes[attackName] || attackDialogues.heroes.default;
+    return randChoice(table).replace('{name}', attackName);
+  }
+  const tier = actor.tier || '下位';
+  const tierData = attackDialogues.monsters[tier] || {};
+  const list = tierData[attackName] || tierData.default || [attackName];
+  return randChoice(list).replace('{name}', attackName);
+}
+
+function showSpeechBubble(x, y, text) {
+  speechBubbles.push({ x, y, text, start: performance.now() });
+}
+
+function drawSpeechBubbles() {
+  const now = performance.now();
+  ctx.save();
+  ctx.setTransform(gameScale, 0, 0, gameScale, offsetX, offsetY);
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  speechBubbles = speechBubbles.filter(b => now - b.start < 2000);
+  speechBubbles.forEach(b => {
+    const px = b.x * cellSize + cellSize / 2;
+    const py = b.y * cellSize - 4;
+    const padding = 4;
+    const textWidth = ctx.measureText(b.text).width + padding * 2;
+    const textHeight = 14;
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.rect(px - textWidth / 2, py - textHeight - 10, textWidth, textHeight);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#000';
+    ctx.fillText(b.text, px, py - 2);
+  });
+  ctx.restore();
+}
+
+function animationLoop() {
+  render();
+  drawSpeechBubbles();
+  requestAnimationFrame(animationLoop);
+}
+
 let canvas, ctx;
 let gameScale = 1;
 let offsetX = 0;
@@ -387,6 +462,7 @@ function autoBattle(monster, mx, my, heroFirst) {
           0
         )})`
       );
+      showSpeechBubble(hero.x, hero.y, getAttackSpeech(hero, atkName, true));
     } else {
       const heroStats = hero.getEffectiveStats();
       const heroDef =
@@ -403,6 +479,7 @@ function autoBattle(monster, mx, my, heroFirst) {
           0
         )})`
       );
+      showSpeechBubble(mx, my, getAttackSpeech(monster, atkName, false));
     }
     heroTurn = !heroTurn;
   }
@@ -549,6 +626,7 @@ function render() {
   ctx.fillStyle = demonLord.timer > 0 ? 'pink' : 'red';
   ctx.fillRect(demonLord.x * cellSize, demonLord.y * cellSize, cellSize, cellSize);
 
+  drawSpeechBubbles();
   drawBattleLog();
 }
 
@@ -677,6 +755,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   render();
   updateStatus();
+  animationLoop();
 });
 
 window.dig = function (x, y) {
