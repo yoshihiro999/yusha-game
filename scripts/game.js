@@ -194,6 +194,7 @@ let hero;
 let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
 let heroAI;
 let tm;
+let battleLog = [];
 
 function resizeCanvas() {
   const scale = Math.min(
@@ -359,9 +360,14 @@ function distributeResources(x, y) {
   });
 }
 
+function addBattleLog(text) {
+  battleLog.push(text);
+  if (battleLog.length > 10) battleLog.shift();
+}
+
 function autoBattle(monster, mx, my, heroFirst) {
-  console.log('--- 戦闘開始 ---');
-  console.log(`勇者HP:${hero.hp} vs モンスターHP:${monster.hp}`);
+  addBattleLog('--- 戦闘開始 ---');
+  addBattleLog(`勇者HP:${hero.hp} vs モンスターHP:${monster.hp}`);
   let heroTurn = heroFirst;
   while (hero.hp > 0 && monster.hp > 0) {
     if (heroTurn) {
@@ -375,7 +381,7 @@ function autoBattle(monster, mx, my, heroFirst) {
       monster.hp -= dmg;
       const waveIndex = tm ? tm.getWaveIndex() + 1 : 1;
       const atkName = getAttackName(hero, true, waveIndex);
-      console.log(
+      addBattleLog(
         `${hero.className}の《${atkName}》 → ${dmg}ダメージ (敵残りHP ${Math.max(
           monster.hp,
           0
@@ -391,7 +397,7 @@ function autoBattle(monster, mx, my, heroFirst) {
       dmg = Math.max(0, dmg);
       hero.hp -= dmg;
       const atkName = getAttackName(monster, false);
-      console.log(
+      addBattleLog(
         `${monster.species}の《${atkName}》 → ${dmg}ダメージ (勇者残りHP ${Math.max(
           hero.hp,
           0
@@ -401,11 +407,11 @@ function autoBattle(monster, mx, my, heroFirst) {
     heroTurn = !heroTurn;
   }
   if (hero.hp <= 0) {
-    console.log('勇者チームは敗北した...');
+    addBattleLog('勇者チームは敗北した...');
     distributeResources(hero.x, hero.y);
     return 'heroDead';
   } else {
-    console.log('モンスターを倒した！');
+    addBattleLog('モンスターを倒した！');
     map[my][mx].monster = null;
     distributeResources(mx, my);
     return 'monsterDead';
@@ -542,6 +548,20 @@ function render() {
   // demon lord
   ctx.fillStyle = demonLord.timer > 0 ? 'pink' : 'red';
   ctx.fillRect(demonLord.x * cellSize, demonLord.y * cellSize, cellSize, cellSize);
+
+  drawBattleLog();
+}
+
+function drawBattleLog() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = 'white';
+  ctx.font = '14px sans-serif';
+  const padding = 10;
+  const lineHeight = 16;
+  const startY = BASE_HEIGHT - padding - lineHeight * battleLog.length;
+  battleLog.forEach((text, i) => {
+    ctx.fillText(text, padding, startY + i * lineHeight);
+  });
 }
 
 function heroTurnPhase() {
