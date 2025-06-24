@@ -150,6 +150,15 @@ function spawnMonster(x, y) {
   const tiers = ['下位', '中位', '上位'];
   const species = randChoice(speciesList);
   const tier = randChoice(tiers);
+  const defTable = {
+    'スライム族': { physDef: 1, magDef: 4 },
+    '獣族': { physDef: 3, magDef: 1 },
+    '植物族': { physDef: 2, magDef: 2 },
+    '昆虫族': { physDef: 4, magDef: 1 },
+    'アンデッド族': { physDef: 2, magDef: 3 },
+    '魔族': { physDef: 3, magDef: 4 }
+  };
+  const defs = defTable[species] || { physDef: 2, magDef: 2 };
   map[y][x].monster = {
     stage: 0,
     nutrients: 0,
@@ -157,7 +166,9 @@ function spawnMonster(x, y) {
     atk: 2,
     species,
     tier,
-    age: 0
+    age: 0,
+    physDef: defs.physDef,
+    magDef: defs.magDef
   };
 }
 
@@ -196,12 +207,15 @@ function autoBattle(monster, mx, my, heroFirst) {
   while (hero.hp > 0 && monster.hp > 0) {
     if (heroTurn) {
       const stats = hero.getEffectiveStats();
-      const usePhysical = stats.physAtk >= stats.magAtk;
-      const dmg = usePhysical ? stats.physAtk : stats.magAtk;
+      const atkType = hero.getAttackType();
+      let dmg =
+        atkType === '物理'
+          ? stats.physAtk - monster.physDef
+          : stats.magAtk - monster.magDef;
+      dmg = Math.max(0, dmg);
       monster.hp -= dmg;
-      const typeLabel = usePhysical ? '物理' : '魔法';
       console.log(
-        `勇者の${typeLabel}攻撃 → ${dmg}ダメージ (敵残り${Math.max(monster.hp, 0)})`
+        `勇者の${atkType}攻撃 → ${dmg}ダメージ (敵残り${Math.max(monster.hp, 0)})`
       );
     } else {
       hero.hp -= monster.atk;
