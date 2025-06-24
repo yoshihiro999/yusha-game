@@ -5,6 +5,12 @@ export class HeroAI {
     this.visited = new Set([`${this.x},${this.y}`]);
   }
 
+  reset(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+    this.visited = new Set([`${x},${y}`]);
+  }
+
   getNextMove(map) {
     const dirs = [
       [1, 0],
@@ -31,5 +37,9 @@ export class HeroAI {
     this.visited.add(`${this.x},${this.y}`);
     return { x: this.x, y: this.y };
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.HeroAI = HeroAI;
 }
 
