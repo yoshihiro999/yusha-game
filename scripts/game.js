@@ -18,8 +18,8 @@ let map = [];
 let monsters = [];
 let hero;
 let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
-let visited = new Set();
-let wave = 1;
+let heroAI;
+let tm;
 
 function resizeCanvas() {
   const scale = Math.min(
@@ -35,8 +35,9 @@ function saveState() {
     map,
     hero,
     demonLord,
-    visited: Array.from(visited),
-    wave
+    heroVisited: heroAI ? Array.from(heroAI.visited) : [],
+    stage: tm ? tm.currentStage : 1,
+    wave: tm ? tm.currentWave : 1
   });
 }
 
@@ -46,8 +47,13 @@ function loadState() {
   map = data.map;
   hero = data.hero;
   demonLord = data.demonLord;
-  visited = new Set(data.visited);
-  wave = data.wave;
+  tm = new window.TurnManager(1, 3);
+  tm.currentStage = data.stage || 1;
+  tm.currentWave = data.wave || 1;
+  heroAI = new window.HeroAI(hero.x, hero.y);
+  if (data.heroVisited) {
+    data.heroVisited.forEach(p => heroAI.visited.add(p));
+  }
   return true;
 }
 
@@ -88,7 +94,6 @@ function spawnHero() {
     atk: heroBaseStats.atk,
     state: 'pursuit' // 'pursuit' or 'escape'
   };
-  visited = new Set(['0,0']);
 }
 
 function spawnMonster(x, y) {
@@ -107,34 +112,6 @@ function spawnMonster(x, y) {
   };
 }
 
-function heroMove() {
-  const dirs = [
-    [1, 0],
-    [-1, 0],
-    [0, 1],
-    [0, -1]
-  ].filter(d => {
-    const nx = hero.x + d[0];
-    const ny = hero.y + d[1];
-    return (
-      nx >= 0 &&
-      ny >= 0 &&
-      nx < gridSize &&
-      ny < gridSize &&
-      map[ny][nx].type === 'path' &&
-      !visited.has(`${nx},${ny}`)
-    );
-  });
-  if (dirs.length === 0) return; // stuck
-  const dir = randChoice(dirs);
-  hero.x += dir[0];
-  hero.y += dir[1];
-  visited.add(`${hero.x},${hero.y}`);
-  const tile = map[hero.y][hero.x];
-  if (tile.fire && tile.fire > 0) {
-    hero.hp -= 1;
-  }
-}
 
 function fight(monster, tile) {
   // simple combat: hero wins but loses 1 hp per stage
@@ -318,8 +295,16 @@ function render() {
   ctx.fillRect(demonLord.x * cellSize, demonLord.y * cellSize, cellSize, cellSize);
 }
 
-function nextTurn() {
-  heroMove();
+function heroTurnPhase() {
+  const next = heroAI.getNextMove({
+    width: gridSize,
+    height: gridSize,
+    tiles: map
+  });
+  if (next) {
+    hero.x = next.x;
+    hero.y = next.y;
+  }
 
   const dirs = [
     [1, 0],
@@ -335,7 +320,8 @@ function nextTurn() {
       if (m) {
         const result = autoBattle(m, nx, ny, hero.state === 'pursuit');
         if (result === 'heroDead') {
-          document.getElementById('status').textContent = `勇者は倒れた。Wave ${wave} 敗北`;
+          document.getElementById('status').textContent =
+            `勇者は倒れた。Stage ${tm.currentStage} Wave ${tm.currentWave} 敗北`;
           render();
           return;
         }
@@ -347,15 +333,21 @@ function nextTurn() {
   monsterTurn();
   checkDemonLord();
   render();
+  updateStatus();
+}
+
+function updateStatus() {
+  if (!tm) return;
+  const status = document.getElementById('status');
   if (demonLord.captured) {
-    document.getElementById('status').textContent = `魔王が連れ去られた。ゲームオーバー`;
+    status.textContent = '魔王が連れ去られた。ゲームオーバー';
     return;
   }
   if (hero.hp <= 0) {
-    document.getElementById('status').textContent = `勇者は倒れた。Wave ${wave} 勝利`;
-  } else {
-    document.getElementById('status').textContent = `Wave ${wave} : Hero HP ${hero.hp}`;
+    status.textContent = `勇者は倒れた。Stage ${tm.currentStage} Wave ${tm.currentWave}`;
+    return;
   }
+  status.textContent = `Stage ${tm.currentStage} Wave ${tm.currentWave} - Phase: ${tm.phase} HP:${hero.hp}`;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -373,22 +365,46 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', resizeCanvas);
 
   if (!loadState()) {
-    createMap();
-    spawnHero();
-    for (let i = 0; i < 5; i++) {
-      let x, y;
-      do {
-        x = randomInt(0, gridSize-1);
-        y = randomInt(0, gridSize-1);
-      } while (map[y][x].type !== 'path');
-      spawnMonster(x, y);
-    }
+    tm = new window.TurnManager(1, 3);
+    tm.on('prepare', async () => {
+      createMap();
+      await tm.nextPhase();
+    });
+    tm.on('placement', async () => {
+      for (let i = 0; i < 5; i++) {
+        let x, y;
+        do {
+          x = randomInt(0, gridSize - 1);
+          y = randomInt(0, gridSize - 1);
+        } while (map[y][x].type !== 'path');
+        spawnMonster(x, y);
+      }
+      await tm.nextPhase();
+    });
+    tm.on('waveStart', () => {
+      spawnHero();
+      heroAI = new window.HeroAI(hero.x, hero.y);
+    });
+    tm.on('heroTurn', heroTurnPhase);
+    tm.on('cleanup', async () => {
+      await tm.nextPhase();
+    });
+    tm.on('waveEnd', async () => {
+      await tm.nextPhase();
+    });
+    tm.on('transition', () => {});
+    tm.start();
   }
-  document.getElementById('nextTurn').addEventListener('click', () => {
-    nextTurn();
+
+  document.getElementById('nextTurn').addEventListener('click', async () => {
+    await tm.nextPhase();
     saveState();
+    render();
+    updateStatus();
   });
+
   render();
+  updateStatus();
 });
 
 window.dig = function (x, y) {

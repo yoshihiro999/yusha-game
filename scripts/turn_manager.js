@@ -69,4 +69,8 @@ export class TurnManager {
   }
 }
 
+if (typeof window !== 'undefined') {
+  window.TurnManager = TurnManager;
+}
+
 
