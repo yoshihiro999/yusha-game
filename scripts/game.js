@@ -8,7 +8,16 @@ const biomes = {
   volcano: { nutrients: 1, mana: 8, color: '#cc8888' }
 };
 
-const heroBaseStats = { hp: 10, mp: 5, atk: 3 };
+// base HP/MP shared by all hero classes
+const heroBaseStats = { hp: 10, mp: 5 };
+
+// base combat stats for each hero job
+const heroClassStats = {
+  hero: { className: '勇者', physAtk: 15, magAtk: 5, physDef: 10, magDef: 5 },
+  warrior: { className: '戦士', physAtk: 10, magAtk: 2, physDef: 15, magDef: 5 },
+  priest: { className: '僧侶', physAtk: 6, magAtk: 10, physDef: 8, magDef: 12 },
+  mage: { className: '魔法使い', physAtk: 4, magAtk: 16, physDef: 6, magDef: 15 }
+};
 
 let canvas, ctx;
 let gameScale = 1;
@@ -46,6 +55,10 @@ function loadState() {
   if (!data) return false;
   map = data.map;
   hero = data.hero;
+  attachHeroMethods(hero);
+  if (!hero.className && hero.job && heroClassStats[hero.job]) {
+    hero.className = heroClassStats[hero.job].className;
+  }
   demonLord = data.demonLord;
   tm = new window.TurnManager(1, 3);
   tm.currentStage = data.stage || 1;
@@ -86,14 +99,50 @@ function createMap() {
   }
 }
 
-function spawnHero() {
-  hero = {
+function attachHeroMethods(h) {
+  h.getEffectiveStats = function() {
+    const stageBonus = Math.pow(1.183, tm.currentStage);
+    const waveBonus = Math.pow(1.1, tm.currentWave);
+    const mult = stageBonus * waveBonus;
+    return {
+      hp: this.baseHp * mult,
+      mp: this.baseMp * mult,
+      physAtk: this.physAtk * mult,
+      magAtk: this.magAtk * mult,
+      physDef: this.physDef * mult,
+      magDef: this.magDef * mult
+    };
+  };
+  h.getAttackType = function() {
+    const stats = this.getEffectiveStats();
+    return stats.physAtk >= stats.magAtk ? '物理' : '魔法';
+  };
+}
+
+function createHero(job = 'hero') {
+  const base = heroClassStats[job] || heroClassStats.hero;
+  const h = {
+    job,
+    className: base.className,
     x: 0,
     y: 0,
-    hp: heroBaseStats.hp,
-    atk: heroBaseStats.atk,
+    baseHp: heroBaseStats.hp,
+    baseMp: heroBaseStats.mp,
+    physAtk: base.physAtk,
+    magAtk: base.magAtk,
+    physDef: base.physDef,
+    magDef: base.magDef,
     state: 'pursuit' // 'pursuit' or 'escape'
   };
+  attachHeroMethods(h);
+  const eff = h.getEffectiveStats();
+  h.hp = eff.hp;
+  h.mp = eff.mp;
+  return h;
+}
+
+function spawnHero(job) {
+  hero = createHero(job);
 }
 
 function spawnMonster(x, y) {
@@ -146,8 +195,14 @@ function autoBattle(monster, mx, my, heroFirst) {
   let heroTurn = heroFirst;
   while (hero.hp > 0 && monster.hp > 0) {
     if (heroTurn) {
-      monster.hp -= hero.atk;
-      console.log(`勇者の攻撃 → ${hero.atk}ダメージ (敵残り${Math.max(monster.hp, 0)})`);
+      const stats = hero.getEffectiveStats();
+      const usePhysical = stats.physAtk >= stats.magAtk;
+      const dmg = usePhysical ? stats.physAtk : stats.magAtk;
+      monster.hp -= dmg;
+      const typeLabel = usePhysical ? '物理' : '魔法';
+      console.log(
+        `勇者の${typeLabel}攻撃 → ${dmg}ダメージ (敵残り${Math.max(monster.hp, 0)})`
+      );
     } else {
       hero.hp -= monster.atk;
       console.log(`モンスターの攻撃 → ${monster.atk}ダメージ (勇者残り${Math.max(hero.hp, 0)})`);
@@ -347,7 +402,10 @@ function updateStatus() {
     status.textContent = `勇者は倒れた。Stage ${tm.currentStage} Wave ${tm.currentWave}`;
     return;
   }
-  status.textContent = `Stage ${tm.currentStage} Wave ${tm.currentWave} - Phase: ${tm.phase} HP:${hero.hp}`;
+  const atkType = hero.getAttackType();
+  status.textContent =
+    `Stage ${tm.currentStage} Wave ${tm.currentWave} - Phase: ${tm.phase} ` +
+    `HP:${hero.hp} クラス:${hero.className} 攻撃:${atkType}`;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
