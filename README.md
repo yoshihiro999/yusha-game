@@ -2,6 +2,8 @@
 
 このリポジトリは、2Dダンジョン・マネジメント型ゲームの試作コードをまとめたものです。勇者の侵攻を魔物の生態系で迎え撃つ構造を軸に設計されています。
 
+ゲームはターン制のwave形式で進行し、モンスターの捕食・進化による魔素循環を重視したデザインになっています。各種JSONデータとスクリプトの連携で構成を管理しています。
+
 ## ディレクトリ構成
 
 ```
@@ -23,15 +25,26 @@
 │   ├── hero_invade.html         ← 勇者侵攻モードUI
 │   ├── monster_canvas.html      ← 魔物配置モードUI
 │   ├── layered_map.html         ← レイヤー構造マップ表示
+│   ├── hero_book.html          ← 勇者図鑑画面
+│   ├── monster_book.html       ← モンスター図鑑画面
+│   ├── title.html              ← タイトル画面
 │   └── index.html               ← ランチャー画面
 │
 ├── scripts/                 # ゲーム制御スクリプト
 │   ├── game.js                  ← ゲーム状態管理
 │   ├── turn_manager.js          ← フェーズ・wave制御
 │   ├── hero_ai.js               ← 勇者探索AI
+│   ├── monster_ai.js            ← モンスターAI
 │   ├── map_renderer.js          ← マップ描画
 │   ├── layered_map_renderer.js  ← レイヤーマップ描画
-│   └── monster_canvas.js        ← 魔物配置処理
+│   ├── monster_canvas.js        ← 魔物配置処理
+│   ├── save_manager.js          ← ローカル保存操作
+│   ├── speechLayer.js           ← セリフ表示レイヤー
+│   ├── title.js                 ← タイトル画面制御
+│   ├── hero_book.js             ← 勇者図鑑画面
+│   ├── monster_book.js          ← モンスター図鑑画面
+│   ├── generate_banter.js       ← 会話データ生成（Node）
+│   └── generate_skill_lines.js  ← スキル台詞生成（Node）
 │
 ├── assets/                # 画像アセット
 │   ├── backgrounds/          ← 背景画像用
@@ -41,7 +54,31 @@
 │
 ├── styles/                 # 共通スタイル
 │   └── styles.css               ← 画面用スタイル
+│
+├── docs/                  # 仕様書・進捗記録
+│   ├── feature_map.md        ← 機能と担当ファイル一覧
+│   ├── progress.md           ← 開発進捗とToDo
+│   ├── json_spec.md          ← JSON構造仕様
+│   ├── evolution.md          ← モンスター進化仕様
+│   └── resource_cycle.md     ← 魔素循環仕様
 ```
+## ドキュメント
+
+設計資料や進捗状況は `docs/` 以下にまとめています。主なファイルは次の通りです。
+
+- `docs/feature_map.md` : 機能と担当ファイルの対応表
+- `docs/progress.md` : 実装状況や ToDo
+- `docs/json_spec.md` : 各 JSON データのフォーマット
+- `docs/evolution.md` : モンスター進化システム
+- `docs/resource_cycle.md` : 魔素循環や死骸処理の仕様
+
+## ファイル連携例
+
+- `scenes/game.html` から `game.js` を読み込み、内部で `TurnManager` や `HeroAI`、`monsterAI` を利用します。
+- `hero_invade.html` は `HeroAI` と `MapRenderer` を組み合わせたテストシーンです。
+- `monster_canvas.js` は `lib/resourceManager.js` と `scripts/map_renderer.js` を呼び出し、マップ上で資源吸収を試します。
+- 図鑑画面 (`hero_book.js`, `monster_book.js`) では JSON データを読み込んでリスト表示を行います。
+
 
 ## 基本仕様メモ
 
