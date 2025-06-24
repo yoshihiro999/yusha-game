@@ -203,6 +203,13 @@ function resizeCanvas() {
   );
   canvas.style.width = `${BASE_WIDTH * scale}px`;
   canvas.style.height = `${BASE_HEIGHT * scale}px`;
+  const layer = document.getElementById('speechLayer');
+  if (layer) {
+    layer.style.width = canvas.style.width;
+    layer.style.height = canvas.style.height;
+    layer.style.left = canvas.offsetLeft + 'px';
+    layer.style.top = canvas.offsetTop + 'px';
+  }
 }
 
 function saveState() {
@@ -387,6 +394,9 @@ function autoBattle(monster, mx, my, heroFirst) {
           0
         )})`
       );
+      if (typeof showSpeechBubble === 'function') {
+        showSpeechBubble(hero.x, hero.y, atkName);
+      }
     } else {
       const heroStats = hero.getEffectiveStats();
       const heroDef =
@@ -403,6 +413,9 @@ function autoBattle(monster, mx, my, heroFirst) {
           0
         )})`
       );
+      if (typeof showSpeechBubble === 'function') {
+        showSpeechBubble(mx, my, atkName);
+      }
     }
     heroTurn = !heroTurn;
   }
