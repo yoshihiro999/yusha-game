@@ -38,6 +38,152 @@ const monsterAttackTypeTable = {
   '魔族': 'magical'
 };
 
+// 技名テーブル
+const heroAttackTable = {
+  hero: [
+    '斬撃',
+    'パワースラッシュ',
+    'ブレイブクロス',
+    'オーラブレード',
+    'ライジングセイバー',
+    'ドラゴンクレスト',
+    'カオスブレイカー',
+    'ホーリーブレード',
+    'アルティメットソード',
+    'レジェンドフィニッシュ'
+  ],
+  warrior: [
+    '一撃打ち',
+    'ハンマーブロー',
+    'ダブルインパクト',
+    'バーストクラッシュ',
+    '激震烈破',
+    '獅子奮迅',
+    'ウォークライクレイヴ',
+    'バーサーカーラッシュ',
+    'ギガクラッシャー',
+    'アースクラッカー'
+  ],
+  priest: [
+    'ヒールスマイト',
+    'セイクリッドブロー',
+    'ホーリーライト',
+    'ジャッジメント',
+    'ディバインスマッシュ',
+    '聖光裂破',
+    'セラフィムストライク',
+    'アークインパルス',
+    'ラグナロクガード',
+    'ゴッドレクイエム'
+  ],
+  mage: [
+    'ファイアボルト',
+    'アイススパイク',
+    'ライトニング',
+    'フレイムランス',
+    'ストームブラスト',
+    'フレアバースト',
+    'メテオストライク',
+    'ギガサンダー',
+    'アストラルゲート',
+    'アルティメットスペル'
+  ]
+};
+
+const monsterAttackTable = {
+  'スライム族': [
+    '体当たり',
+    '粘液飛ばし',
+    'とろける触手',
+    'ぬるぬる連打',
+    'スライムボム',
+    '腐食スプラッシュ',
+    'アシッドブレイク',
+    '粘塊崩壊',
+    'ゲルデストロイ',
+    'キングスライムクラッシュ'
+  ],
+  '獣族': [
+    '噛みつき',
+    '爪ひっかき',
+    '突進',
+    '牙連撃',
+    '咆哮',
+    '地獄牙',
+    '狂乱乱舞',
+    '破滅クロー',
+    '獣王烈爪',
+    '闇炎咆哮'
+  ],
+  '植物族': [
+    'つる攻撃',
+    '胞子飛ばし',
+    '根っこ締め付け',
+    '吸血花',
+    '寄生蔓',
+    '絞殺花嵐',
+    'トゲトゲ狂宴',
+    '捕食の華',
+    '樹海崩壊',
+    '世界樹の裁き'
+  ],
+  '昆虫族': [
+    '突刺し',
+    '硬殻ぶつかり',
+    '毒針攻撃',
+    '羽音斬り',
+    '大顎クラッシュ',
+    '毒牙連撃',
+    '甲殻粉砕',
+    '獣喰いバイト',
+    '悪夢羽ばたき',
+    '皇帝穿孔'
+  ],
+  'アンデッド族': [
+    '骨打ち',
+    '呪いの吐息',
+    '腐敗タッチ',
+    '魂吸い',
+    '地獄の手招き',
+    '亡者の咆哮',
+    '血塗れの鎌',
+    '死者の舞踏',
+    '冥界の解放',
+    '終末の鎮魂歌'
+  ],
+  '魔族': [
+    '影の爪',
+    'ダークボルト',
+    'ファイアブレス',
+    '地獄の炎',
+    '闇の衝撃',
+    '悪魔の微笑',
+    '魔王の従者',
+    '虚無の波動',
+    '深淵の咆哮',
+    '魔界終焉斬'
+  ]
+};
+
+function getAttackName(actor, isHero, wave = 1) {
+  if (isHero) {
+    const table = heroAttackTable[actor.job] || heroAttackTable.hero;
+    const w = Math.max(1, Math.min(8, wave));
+    const idx = Math.min(
+      table.length - 1,
+      Math.floor(((w - 1) / 8) * table.length)
+    );
+    return table[idx];
+  } else {
+    const table = monsterAttackTable[actor.species] || monsterAttackTable['スライム族'];
+    let limit = table.length;
+    if (actor.tier === '下位') limit = 4;
+    else if (actor.tier === '中位') limit = 7;
+    const idx = Math.floor(Math.random() * limit);
+    return table[idx];
+  }
+}
+
 let canvas, ctx;
 let gameScale = 1;
 let offsetX = 0;
@@ -227,12 +373,16 @@ function autoBattle(monster, mx, my, heroFirst) {
           : stats.magAtk - monster.magDef;
       dmg = Math.max(0, dmg);
       monster.hp -= dmg;
+      const waveIndex = tm ? tm.getWaveIndex() + 1 : 1;
+      const atkName = getAttackName(hero, true, waveIndex);
       console.log(
-        `勇者の${atkType}攻撃 → ${dmg}ダメージ (敵残り${Math.max(monster.hp, 0)})`
+        `${hero.className}の《${atkName}》 → ${dmg}ダメージ (敵残りHP ${Math.max(
+          monster.hp,
+          0
+        )})`
       );
     } else {
       const heroStats = hero.getEffectiveStats();
-      const mAtkType = monster.attackType === 'magical' ? '魔法' : '物理';
       const heroDef =
         (monster.attackType || 'physical') === 'physical'
           ? heroStats.physDef
@@ -240,8 +390,12 @@ function autoBattle(monster, mx, my, heroFirst) {
       let dmg = monster.atk - heroDef;
       dmg = Math.max(0, dmg);
       hero.hp -= dmg;
+      const atkName = getAttackName(monster, false);
       console.log(
-        `モンスターの${mAtkType}攻撃(${monster.atk}-${heroDef}) → ${dmg}ダメージ (勇者残り${Math.max(hero.hp, 0)})`
+        `${monster.species}の《${atkName}》 → ${dmg}ダメージ (勇者残りHP ${Math.max(
+          hero.hp,
+          0
+        )})`
       );
     }
     heroTurn = !heroTurn;
