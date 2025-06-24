@@ -19,6 +19,25 @@ const heroClassStats = {
   mage: { className: '魔法使い', physAtk: 4, magAtk: 16, physDef: 6, magDef: 15 }
 };
 
+// monster defense values and attack type tendencies by species
+const monsterDefenseTable = {
+  'スライム族': { physDef: 1, magDef: 4 },
+  '獣族': { physDef: 3, magDef: 1 },
+  '植物族': { physDef: 2, magDef: 2 },
+  '昆虫族': { physDef: 4, magDef: 1 },
+  'アンデッド族': { physDef: 2, magDef: 3 },
+  '魔族': { physDef: 3, magDef: 4 }
+};
+
+const monsterAttackTypeTable = {
+  'スライム族': 'magical',
+  '獣族': 'physical',
+  '植物族': 'magical',
+  '昆虫族': 'physical',
+  'アンデッド族': 'physical',
+  '魔族': 'magical'
+};
+
 let canvas, ctx;
 let gameScale = 1;
 let offsetX = 0;
@@ -150,15 +169,8 @@ function spawnMonster(x, y) {
   const tiers = ['下位', '中位', '上位'];
   const species = randChoice(speciesList);
   const tier = randChoice(tiers);
-  const defTable = {
-    'スライム族': { physDef: 1, magDef: 4 },
-    '獣族': { physDef: 3, magDef: 1 },
-    '植物族': { physDef: 2, magDef: 2 },
-    '昆虫族': { physDef: 4, magDef: 1 },
-    'アンデッド族': { physDef: 2, magDef: 3 },
-    '魔族': { physDef: 3, magDef: 4 }
-  };
-  const defs = defTable[species] || { physDef: 2, magDef: 2 };
+  const defs = monsterDefenseTable[species] || { physDef: 2, magDef: 2 };
+  const attackType = monsterAttackTypeTable[species] || 'physical';
   map[y][x].monster = {
     stage: 0,
     nutrients: 0,
@@ -168,7 +180,8 @@ function spawnMonster(x, y) {
     tier,
     age: 0,
     physDef: defs.physDef,
-    magDef: defs.magDef
+    magDef: defs.magDef,
+    attackType
   };
 }
 
@@ -218,8 +231,18 @@ function autoBattle(monster, mx, my, heroFirst) {
         `勇者の${atkType}攻撃 → ${dmg}ダメージ (敵残り${Math.max(monster.hp, 0)})`
       );
     } else {
-      hero.hp -= monster.atk;
-      console.log(`モンスターの攻撃 → ${monster.atk}ダメージ (勇者残り${Math.max(hero.hp, 0)})`);
+      const heroStats = hero.getEffectiveStats();
+      const mAtkType = monster.attackType === 'magical' ? '魔法' : '物理';
+      const heroDef =
+        (monster.attackType || 'physical') === 'physical'
+          ? heroStats.physDef
+          : heroStats.magDef;
+      let dmg = monster.atk - heroDef;
+      dmg = Math.max(0, dmg);
+      hero.hp -= dmg;
+      console.log(
+        `モンスターの${mAtkType}攻撃(${monster.atk}-${heroDef}) → ${dmg}ダメージ (勇者残り${Math.max(hero.hp, 0)})`
+      );
     }
     heroTurn = !heroTurn;
   }
@@ -302,7 +325,10 @@ function monsterTurn() {
             atk: 2,
             species: '植物族',
             tier: '下位',
-            age: 0
+            age: 0,
+            physDef: monsterDefenseTable['植物族'].physDef,
+            magDef: monsterDefenseTable['植物族'].magDef,
+            attackType: monsterAttackTypeTable['植物族']
           };
           break;
         }
