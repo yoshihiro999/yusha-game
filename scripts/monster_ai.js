@@ -172,4 +172,25 @@ function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {
   monster.mp = (monster.mp || 0) + gained;
 }
 
-window.monsterAI = { decideMonsterMove, afterMonsterMove, processMonsterTurn };
+function processAllMonsters(monsters, map, resourceManager, monsterDefs = {}) {
+  const tiles = map.tiles || map;
+  const width = map.width || (tiles[0] ? tiles[0].length : 0);
+  const height = map.height || tiles.length;
+  const list = [];
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const m = tiles[y][x].monster;
+      if (m) list.push({ m, x, y });
+    }
+  }
+  list.forEach(({ m, x, y }) => {
+    processMonsterTurn(m, x, y, map, resourceManager, monsterDefs);
+  });
+}
+
+window.monsterAI = {
+  decideMonsterMove,
+  afterMonsterMove,
+  processMonsterTurn,
+  processAllMonsters
+};
