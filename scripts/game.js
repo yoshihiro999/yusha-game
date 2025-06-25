@@ -198,6 +198,7 @@ let heroAIs = [];
 let tm;
 let resourceManager;
 let battleLog = [];
+let monsterDefs = {};
 
 function resizeCanvas() {
   const scale = Math.min(
@@ -356,23 +357,35 @@ function spawnHero(job) {
 }
 
 function spawnMonster(x, y) {
-  const speciesList = ['スライム族', '獣族', '植物族', '昆虫族', 'アンデッド族', '魔族'];
-  const tiers = ['下位', '中位', '上位'];
-  const species = randChoice(speciesList);
-  const tier = randChoice(tiers);
+  const ids = Object.keys(monsterDefs);
+  if (ids.length === 0) return;
+  const id = randChoice(ids);
+  const def = monsterDefs[id] || {};
+
+  const speciesList = ["スライム族", "獣族", "植物族", "昆虫族", "アンデッド族", "魔族"];
+  const tiers = ["下位", "中位", "上位"];
+  const species = def.species || randChoice(speciesList);
+  const tier = def.tier || randChoice(tiers);
   const defs = monsterDefenseTable[species] || { physDef: 2, magDef: 2 };
-  const attackType = monsterAttackTypeTable[species] || 'physical';
+  const attackType = monsterAttackTypeTable[species] || "physical";
+
   map[y][x].monster = {
+    id,
+    age: 0,
     stage: 0,
     nutrients: 0,
-    hp: 8,
-    atk: 2,
+    hp: def.maxHP || 8,
+    atk: def.atk || 2,
+    mp: def.mp || 0,
     species,
     tier,
-    age: 0,
-    physDef: defs.physDef,
-    magDef: defs.magDef,
-    attackType
+    physDef: def.physDef || defs.physDef,
+    magDef: def.magDef || defs.magDef,
+    attackType,
+    growthTurns: def.growthTurns,
+    evolvedTo: def.evolvedTo,
+    prey: def.prey ? [...def.prey] : undefined,
+    color: def.color
   };
 }
 
@@ -661,7 +674,7 @@ function heroTurnPhase() {
     heroes,
     map,
     resourceManager,
-    {}
+    monsterDefs
   );
   checkDemonLord();
   render();
@@ -685,7 +698,7 @@ function updateStatus() {
     `HP:${hero.hp} クラス:${hero.className} 攻撃:${atkType}`;
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   canvas.width = BASE_WIDTH;
@@ -698,6 +711,16 @@ window.addEventListener('DOMContentLoaded', () => {
   offsetY = (BASE_HEIGHT - gameHeight * gameScale) / 2;
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+
+  try {
+    const res = await fetch('../data/simple_monsters.json');
+    const data = await res.json();
+    data.forEach(m => {
+      monsterDefs[m.id] = m;
+    });
+  } catch (e) {
+    console.error('Failed to load monster data', e);
+  }
 
   if (!loadState()) {
     tm = new window.TurnManager(1, 3);
