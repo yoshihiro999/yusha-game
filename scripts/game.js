@@ -191,8 +191,10 @@ let offsetY = 0;
 let map = [];
 let monsters = [];
 let hero;
+let heroes = [];
 let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
 let heroAI;
+let heroAIs = [];
 let tm;
 let resourceManager;
 let battleLog = [];
@@ -233,11 +235,13 @@ function loadState() {
   if (!hero.className && hero.job && heroClassStats[hero.job]) {
     hero.className = heroClassStats[hero.job].className;
   }
+  heroes = [hero];
   demonLord = data.demonLord;
   tm = new window.TurnManager(1, 3);
   tm.currentStage = data.stage || 1;
   tm.currentWave = data.wave || 1;
   heroAI = new window.HeroAI(hero.x, hero.y);
+  heroAIs = [heroAI];
   if (data.heroVisited) {
     data.heroVisited.forEach(p => heroAI.visited.add(p));
   }
@@ -346,6 +350,9 @@ function createHero(job = 'hero') {
 
 function spawnHero(job) {
   hero = createHero(job);
+  heroes = [hero];
+  heroAI = new window.HeroAI(hero.x, hero.y);
+  heroAIs = [heroAI];
 }
 
 function spawnMonster(x, y) {
@@ -402,14 +409,14 @@ function addBattleLog(text) {
   if (battleLog.length > 10) battleLog.shift();
 }
 
-function autoBattle(monster, mx, my, heroFirst) {
+function autoBattle(monster, mx, my, actorHero, heroFirst) {
   addBattleLog('--- 戦闘開始 ---');
-  addBattleLog(`勇者HP:${hero.hp} vs モンスターHP:${monster.hp}`);
+  addBattleLog(`勇者HP:${actorHero.hp} vs モンスターHP:${monster.hp}`);
   let heroTurn = heroFirst;
-  while (hero.hp > 0 && monster.hp > 0) {
+  while (actorHero.hp > 0 && monster.hp > 0) {
     if (heroTurn) {
-      const stats = hero.getEffectiveStats();
-      const atkType = hero.getAttackType();
+      const stats = actorHero.getEffectiveStats();
+      const atkType = actorHero.getAttackType();
       let dmg =
         atkType === '物理'
           ? stats.physAtk - monster.physDef
@@ -417,29 +424,29 @@ function autoBattle(monster, mx, my, heroFirst) {
       dmg = Math.max(0, dmg);
       monster.hp -= dmg;
       const waveIndex = tm ? tm.getWaveIndex() + 1 : 1;
-      const atkName = getAttackName(hero, true, waveIndex);
+      const atkName = getAttackName(actorHero, true, waveIndex);
       addBattleLog(
-        `${hero.className}の《${atkName}》 → ${dmg}ダメージ (敵残りHP ${Math.max(
+        `${actorHero.className}の《${atkName}》 → ${dmg}ダメージ (敵残りHP ${Math.max(
           monster.hp,
           0
         )})`
       );
       if (typeof showSpeechBubble === 'function') {
-        showSpeechBubble(hero.x, hero.y, atkName);
+        showSpeechBubble(actorHero.x, actorHero.y, atkName);
       }
     } else {
-      const heroStats = hero.getEffectiveStats();
+      const heroStats = actorHero.getEffectiveStats();
       const heroDef =
         (monster.attackType || 'physical') === 'physical'
           ? heroStats.physDef
           : heroStats.magDef;
       let dmg = monster.atk - heroDef;
       dmg = Math.max(0, dmg);
-      hero.hp -= dmg;
+      actorHero.hp -= dmg;
       const atkName = getAttackName(monster, false);
       addBattleLog(
         `${monster.species}の《${atkName}》 → ${dmg}ダメージ (勇者残りHP ${Math.max(
-          hero.hp,
+          actorHero.hp,
           0
         )})`
       );
@@ -449,9 +456,9 @@ function autoBattle(monster, mx, my, heroFirst) {
     }
     heroTurn = !heroTurn;
   }
-  if (hero.hp <= 0) {
+  if (actorHero.hp <= 0) {
     addBattleLog('勇者チームは敗北した...');
-    distributeResources(hero.x, hero.y);
+    distributeResources(actorHero.x, actorHero.y);
     return 'heroDead';
   } else {
     addBattleLog('モンスターを倒した！');
@@ -484,8 +491,9 @@ function monsterTurn() {
 
     window.monsterAI.afterMonsterMove(m, fromTile);
 
-    if (hero.x === tx && hero.y === ty) {
-      const result = autoBattle(m, tx, ty, false);
+    const targetHero = heroes.find(h => h.x === tx && h.y === ty);
+    if (targetHero) {
+      const result = autoBattle(m, tx, ty, targetHero, false);
       if (result === 'heroDead') return;
     } else if (!targetTile.monster) {
       targetTile.monster = m;
@@ -539,15 +547,18 @@ function monsterTurn() {
     }
 
     if (m.species === '植物族' && m.tier === '上位') {
-      if (Math.abs(hero.x - tx) + Math.abs(hero.y - ty) === 1) {
-        hero.hp -= 1; // trap damage
+      for (const h of heroes) {
+        if (Math.abs(h.x - tx) + Math.abs(h.y - ty) === 1) {
+          h.hp -= 1; // trap damage
+        }
       }
     }
   });
 }
 
 function checkDemonLord() {
-  if (hero.x === demonLord.x && hero.y === demonLord.y) {
+  const touching = heroes.some(h => h.x === demonLord.x && h.y === demonLord.y);
+  if (touching) {
     demonLord.timer += 1;
     if (demonLord.timer >= 3) {
       demonLord.captured = true;
@@ -585,9 +596,11 @@ function render() {
       }
     }
   }
-  // hero
+  // heroes
   ctx.fillStyle = 'blue';
-  ctx.fillRect(hero.x * cellSize, hero.y * cellSize, cellSize, cellSize);
+  for (const h of heroes) {
+    ctx.fillRect(h.x * cellSize, h.y * cellSize, cellSize, cellSize);
+  }
   // demon lord
   ctx.fillStyle = demonLord.timer > 0 ? 'pink' : 'red';
   ctx.fillRect(demonLord.x * cellSize, demonLord.y * cellSize, cellSize, cellSize);
@@ -608,15 +621,14 @@ function drawBattleLog() {
 }
 
 function heroTurnPhase() {
-  const next = heroAI.getNextMove({
-    width: gridSize,
-    height: gridSize,
-    tiles: map
+  heroes.forEach((h, idx) => {
+    const ai = heroAIs[idx];
+    const next = ai.getNextMove({ width: gridSize, height: gridSize, tiles: map });
+    if (next) {
+      h.x = next.x;
+      h.y = next.y;
+    }
   });
-  if (next) {
-    hero.x = next.x;
-    hero.y = next.y;
-  }
 
   const dirs = [
     [1, 0],
@@ -624,26 +636,29 @@ function heroTurnPhase() {
     [0, 1],
     [0, -1]
   ];
-  for (const d of dirs) {
-    const nx = hero.x + d[0];
-    const ny = hero.y + d[1];
-    if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
-      const m = map[ny][nx].monster;
-      if (m) {
-        const result = autoBattle(m, nx, ny, hero.state === 'pursuit');
-        if (result === 'heroDead') {
-          document.getElementById('status').textContent =
-            `勇者は倒れた。Stage ${tm.currentStage} Wave ${tm.currentWave} 敗北`;
-          render();
-          return;
+  for (const h of heroes) {
+    for (const d of dirs) {
+      const nx = h.x + d[0];
+      const ny = h.y + d[1];
+      if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
+        const m = map[ny][nx].monster;
+        if (m) {
+          const result = autoBattle(m, nx, ny, h, h.state === 'pursuit');
+          if (result === 'heroDead') {
+            document.getElementById('status').textContent =
+              `勇者は倒れた。Stage ${tm.currentStage} Wave ${tm.currentWave} 敗北`;
+            render();
+            return;
+          }
+          break;
         }
-        break;
       }
     }
   }
 
   window.monsterAI.processAllMonsters(
     monsters,
+    heroes,
     map,
     resourceManager,
     {}
@@ -703,7 +718,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     tm.on('waveStart', () => {
       spawnHero();
-      heroAI = new window.HeroAI(hero.x, hero.y);
     });
     tm.on('heroTurn', heroTurnPhase);
     tm.on('cleanup', async () => {
