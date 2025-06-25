@@ -194,6 +194,7 @@ let hero;
 let demonLord = { x: 20, y: 20, captured: false, timer: 0 };
 let heroAI;
 let tm;
+let resourceManager;
 let battleLog = [];
 
 function resizeCanvas() {
@@ -240,6 +241,7 @@ function loadState() {
   if (data.heroVisited) {
     data.heroVisited.forEach(p => heroAI.visited.add(p));
   }
+  resourceManager = createResourceManager(map);
   return true;
 }
 
@@ -270,6 +272,34 @@ function createMap() {
   for (let y = 0; y <= demonLord.y; y++) {
     map[y][demonLord.x].type = 'path';
   }
+  resourceManager = createResourceManager(map);
+}
+
+function createResourceManager(mapRef) {
+  return {
+    spreadNutrients(x, y, value = 1) {
+      const dirs = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1]
+      ];
+      dirs.forEach(d => {
+        const nx = x + d[0];
+        const ny = y + d[1];
+        if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
+          mapRef[ny][nx].nutrients += value;
+        }
+      });
+    },
+    absorbMana(x, y) {
+      if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) return 0;
+      const tile = mapRef[y][x];
+      const take = Math.min(1, tile.mana);
+      tile.mana -= take;
+      return take;
+    }
+  };
 }
 
 function attachHeroMethods(h) {
@@ -612,7 +642,12 @@ function heroTurnPhase() {
     }
   }
 
-  monsterTurn();
+  window.monsterAI.processAllMonsters(
+    monsters,
+    map,
+    resourceManager,
+    {}
+  );
   checkDemonLord();
   render();
   updateStatus();
