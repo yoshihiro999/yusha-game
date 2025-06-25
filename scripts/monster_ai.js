@@ -128,4 +128,48 @@ function afterMonsterMove(monster, fromTile) {
 }
 
 // expose for game.js
-window.monsterAI = { decideMonsterMove, afterMonsterMove };
+function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {}) {
+  const def = monsterDefs[monster.id] || {};
+
+  monster.age = (monster.age || 0) + 1;
+  if (def.growthTurns && monster.age >= def.growthTurns && def.evolvedTo) {
+    monster.id = def.evolvedTo;
+    monster.age = 0;
+  }
+
+  const dirs = getValidDirs(x, y, map.tiles || map);
+  let dir = randChoice(dirs);
+  if (def.prey && def.prey.length > 0) {
+    const targetDir = dirs.find(d => {
+      const nx = x + d[0];
+      const ny = y + d[1];
+      const tile = map.tiles ? map.tiles[ny][nx] : map[ny][nx];
+      return tile.monster && def.prey.includes(tile.monster.id);
+    });
+    if (targetDir) dir = targetDir;
+  }
+
+  const nx = x + dir[0];
+  const ny = y + dir[1];
+  if (!inBounds(nx, ny, map.tiles ? map.width : map[0].length, map.tiles ? map.height : map.length)) {
+    return;
+  }
+
+  const fromTile = map.tiles ? map.tiles[y][x] : map[y][x];
+  const toTile = map.tiles ? map.tiles[ny][nx] : map[ny][nx];
+
+  if (toTile.monster && def.prey && def.prey.includes(toTile.monster.id)) {
+    resourceManager.spreadNutrients(nx, ny, toTile.monster.maxHP || 1);
+    monster.mp = (monster.mp || 0) + (toTile.monster.mp || 0);
+    toTile.monster = monster;
+    fromTile.monster = null;
+  } else if (!toTile.monster) {
+    toTile.monster = monster;
+    fromTile.monster = null;
+  }
+
+  const gained = resourceManager.absorbMana(nx, ny);
+  monster.mp = (monster.mp || 0) + gained;
+}
+
+window.monsterAI = { decideMonsterMove, afterMonsterMove, processMonsterTurn };

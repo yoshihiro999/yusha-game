@@ -699,4 +699,15 @@
     "hp": 326,
     "attack": 133
   }
+,
+  {
+    "id": "slime",
+    "growthTurns": 3,
+    "evolvedTo": "slime_lord",
+    "prey": ["bat"],
+    "color": "#00cc88",
+    "maxHP": 10,
+    "atk": 2,
+    "mp": 3
+  }
 ]
