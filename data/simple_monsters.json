@@ -1,0 +1,26 @@
+[
+  {
+    "id": "slime",
+    "name": "スライム",
+    "color": "#00cc88",
+    "growthTurns": 3,
+    "evolvedTo": "slime_lord"
+  },
+  {
+    "id": "slime_lord",
+    "name": "スライムロード",
+    "color": "#004488"
+  },
+  {
+    "id": "bat",
+    "name": "コウモリ",
+    "color": "#cc00cc",
+    "growthTurns": 3,
+    "evolvedTo": "bat_king"
+  },
+  {
+    "id": "bat_king",
+    "name": "バットキング",
+    "color": "#660066"
+  }
+]
