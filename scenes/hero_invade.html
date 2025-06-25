@@ -23,7 +23,7 @@
   <script type="module">
     import { generateMap } from '../lib/resourceManager.js';
     import { HeroAI } from '../scripts/hero_ai.js';
-    import { MapRenderer } from '../scripts/map_renderer.js';
+    import { MapRenderer, placeHeroesOnMap } from '../scripts/map_renderer.js';
     import { TurnManager } from '../scripts/turn_manager.js';
     import config from '../data/game_config.json' assert { type: 'json' };
     import mapInfo from '../data/map.json' assert { type: 'json' };
@@ -99,10 +99,12 @@
 
     document.getElementById('nextTurn').addEventListener('click', async () => {
       await tm.nextPhase();
-      renderer.render(heroes);
+      placeHeroesOnMap(heroes, map);
+      renderer.render();
       updateStatus();
     });
 
+    placeHeroesOnMap(heroes, map);
     renderer.render();
     tm.start();
     updateStatus();
@@ -110,7 +112,8 @@
     window.dig = (x, y) => {
       if (map.tiles[y] && map.tiles[y][x]) {
         map.tiles[y][x].type = 'path';
-        renderer.render(heroes);
+        placeHeroesOnMap(heroes, map);
+        renderer.render();
       }
     };
   </script>

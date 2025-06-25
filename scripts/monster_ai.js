@@ -47,6 +47,20 @@ function heroInRange(x, y, hero, range) {
   return Math.abs(hero.x - x) + Math.abs(hero.y - y) <= range;
 }
 
+function findNearestHero(monster, heroes) {
+  if (!heroes || heroes.length === 0) return null;
+  let nearest = null;
+  let minDist = Infinity;
+  for (const h of heroes) {
+    const dist = Math.abs(monster.x - h.x) + Math.abs(monster.y - h.y);
+    if (dist < minDist) {
+      minDist = dist;
+      nearest = h;
+    }
+  }
+  return nearest;
+}
+
 function decideMonsterMove(monster, x, y, map, hero) {
   const dirs = getValidDirs(x, y, map);
   // fallback random direction
@@ -128,7 +142,7 @@ function afterMonsterMove(monster, fromTile) {
 }
 
 // expose for game.js
-function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {}) {
+function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {}, hero = null) {
   const def = monsterDefs[monster.id] || {};
 
   monster.age = (monster.age || 0) + 1;
@@ -137,8 +151,11 @@ function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {
     monster.age = 0;
   }
 
-  const dirs = getValidDirs(x, y, map.tiles || map);
-  let dir = randChoice(dirs);
+  const mapTiles = map.tiles || map;
+  const dirs = getValidDirs(x, y, mapTiles);
+  if (dirs.length === 0) return;
+
+  let dir = window.monsterAI.decideMonsterMove(monster, x, y, mapTiles, hero);
   if (def.prey && def.prey.length > 0) {
     const targetDir = dirs.find(d => {
       const nx = x + d[0];
@@ -151,12 +168,12 @@ function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {
 
   const nx = x + dir[0];
   const ny = y + dir[1];
-  if (!inBounds(nx, ny, map.tiles ? map.width : map[0].length, map.tiles ? map.height : map.length)) {
+  if (!inBounds(nx, ny, mapTiles[0].length, mapTiles.length)) {
     return;
   }
 
-  const fromTile = map.tiles ? map.tiles[y][x] : map[y][x];
-  const toTile = map.tiles ? map.tiles[ny][nx] : map[ny][nx];
+  const fromTile = mapTiles[y][x];
+  const toTile = mapTiles[ny][nx];
 
   if (toTile.monster && def.prey && def.prey.includes(toTile.monster.id)) {
     resourceManager.spreadNutrients(nx, ny, toTile.monster.maxHP || 1);
@@ -170,9 +187,12 @@ function processMonsterTurn(monster, x, y, map, resourceManager, monsterDefs = {
 
   const gained = resourceManager.absorbMana(nx, ny);
   monster.mp = (monster.mp || 0) + gained;
+
+  monster.x = nx;
+  monster.y = ny;
 }
 
-function processAllMonsters(monsters, map, resourceManager, monsterDefs = {}) {
+function processAllMonsters(monsters, heroes, map, resourceManager, monsterDefs = {}) {
   const tiles = map.tiles || map;
   const width = map.width || (tiles[0] ? tiles[0].length : 0);
   const height = map.height || tiles.length;
@@ -184,7 +204,8 @@ function processAllMonsters(monsters, map, resourceManager, monsterDefs = {}) {
     }
   }
   list.forEach(({ m, x, y }) => {
-    processMonsterTurn(m, x, y, map, resourceManager, monsterDefs);
+    const hero = findNearestHero(m, heroes);
+    processMonsterTurn(m, x, y, map, resourceManager, monsterDefs, hero);
   });
 }
 

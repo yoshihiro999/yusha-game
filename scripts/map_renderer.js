@@ -8,11 +8,15 @@ export class MapRenderer {
     canvas.height = map.height * this.cellSize;
   }
 
-  render(heroes = []) {
+  render() {
     for (let y = 0; y < this.map.height; y++) {
       for (let x = 0; x < this.map.width; x++) {
         const tile = this.map.tiles[y][x];
-        if (tile.type === 'path') {
+        if (tile.monster) {
+          this.ctx.fillStyle = '#33cc99';
+        } else if (tile.hero) {
+          this.ctx.fillStyle = '#3366cc';
+        } else if (tile.type === 'path') {
           this.ctx.fillStyle = '#dcb35c';
         } else {
           const mana = tile.mana;
@@ -27,16 +31,21 @@ export class MapRenderer {
         );
       }
     }
+  }
+}
 
-    this.ctx.fillStyle = 'blue';
-    heroes.forEach(h => {
-      this.ctx.fillRect(
-        h.x * this.cellSize,
-        h.y * this.cellSize,
-        this.cellSize,
-        this.cellSize
-      );
-    });
+export function placeHeroesOnMap(heroes, map) {
+  const tiles = map.tiles || map;
+  for (const row of tiles) {
+    for (const cell of row) {
+      delete cell.hero;
+    }
+  }
+  if (!heroes) return;
+  for (const h of heroes) {
+    if (h && h.x >= 0 && h.y >= 0 && h.y < tiles.length && h.x < tiles[0].length) {
+      tiles[h.y][h.x].hero = h;
+    }
   }
 }
 
