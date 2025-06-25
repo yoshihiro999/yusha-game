@@ -14,10 +14,10 @@ function getValidDirs(x, y, map) {
   return dirs.filter(d => {
     const nx = x + d[0];
     const ny = y + d[1];
-    return (
-      inBounds(nx, ny, map[0].length, map.length) &&
-      map[ny][nx].type === 'path'
-    );
+    if (!inBounds(nx, ny, map[0].length, map.length)) return false;
+    const tile = map[ny][nx];
+    if (tile.type === undefined) return true;
+    return tile.type === 'path';
   });
 }
 
