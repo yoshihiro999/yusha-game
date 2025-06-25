@@ -47,8 +47,10 @@ function heroInRange(x, y, hero, range) {
   return Math.abs(hero.x - x) + Math.abs(hero.y - y) <= range;
 }
 
+const dummyHero = { x: 0, y: 0, hp: 0 };
+
 function findNearestHero(monster, heroes) {
-  if (!heroes || heroes.length === 0) return null;
+  if (!heroes || heroes.length === 0) return dummyHero;
   let nearest = null;
   let minDist = Infinity;
   for (const h of heroes) {
@@ -205,7 +207,7 @@ function processAllMonsters(monsters, heroes, map, resourceManager, monsterDefs 
   }
   list.forEach(({ m, x, y }) => {
     const hero = findNearestHero(m, heroes);
-    processMonsterTurn(m, x, y, map, resourceManager, monsterDefs, hero);
+    processMonsterTurn(m, x, y, tiles, resourceManager, monsterDefs, hero);
   });
 }
 
