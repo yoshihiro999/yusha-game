@@ -71,6 +71,7 @@
 - `docs/json_spec.md` : 各 JSON データのフォーマット
 - `docs/evolution.md` : モンスター進化システム
 - `docs/resource_cycle.md` : 魔素循環や死骸処理の仕様
+- `docs/ai_design.md` : 魔物と勇者のAI概要
 
 ## ファイル連携例
 
