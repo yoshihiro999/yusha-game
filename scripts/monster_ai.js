@@ -209,6 +209,28 @@ function processAllMonsters(monsters, heroes, map, resourceManager, monsterDefs 
     const hero = findNearestHero(m, heroes);
     processMonsterTurn(m, x, y, tiles, resourceManager, monsterDefs, hero);
   });
+
+  const demons = list.filter(({ m }) => m.species === '魔族' && m.tier === '上位');
+  const bonus = Math.min(demons.length * 0.03, 0.6);
+  window.monsterAI.defenseBonus = bonus;
+
+  demons.forEach(({ m, x, y }) => {
+    const dirs = [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1]
+    ];
+    for (const d of dirs) {
+      const nx = x + d[0];
+      const ny = y + d[1];
+      if (!inBounds(nx, ny, width, height)) continue;
+      const other = tiles[ny][nx].monster;
+      if (other && other !== m && other.species === '魔族' && other.tier === '上位') {
+        m.hp -= 1;
+      }
+    }
+  });
 }
 
 window.monsterAI = {
@@ -217,3 +239,4 @@ window.monsterAI = {
   processMonsterTurn,
   processAllMonsters
 };
+window.monsterAI.defenseBonus = 0;
